@@ -7,5 +7,5 @@ public class Model {
     public Model(Triangle[] triangles) {
         this.triangles = triangles;
     }
-    
+
 }

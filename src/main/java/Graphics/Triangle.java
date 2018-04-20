@@ -1,7 +1,7 @@
 package Graphics;
 
 public class Triangle {
-    final Point3D v1, v2, v3;
+    public final Point3D v1, v2, v3;
 
     public Triangle(Point3D v1, Point3D v2, Point3D v3) {
         this.v1 = v1;

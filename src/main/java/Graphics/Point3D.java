@@ -1,8 +1,8 @@
 package Graphics;
 
 public class Point3D {
-    int id; //equal to line number in data file
-    final double x, y, z;
+    public int id; //equal to line number in data file
+    public final double x, y, z;
 
     public Point3D(int id, double x, double y, double z) {
         this.id = id;

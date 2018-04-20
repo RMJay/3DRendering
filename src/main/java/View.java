@@ -1,13 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+
 import Graphics.*;
 
 public class View extends JPanel {
 
-    FaceGraphic faceGraphic;
+    final Model modelInModelCoords;
+    Polygon[] polygons = null;
+    AffineTransform3D viewTransform = AffineTransform3D.identity();
 
-    public View(FaceGraphic faceGraphic) {
-        this.faceGraphic = faceGraphic;
+    public View(Model model) {
+        this.modelInModelCoords = model;
     }
 
     @Override
@@ -26,6 +31,10 @@ public class View extends JPanel {
         GradientPaint gp = new GradientPaint(0, 0, top, 0, h, bottom);
         g.setPaint(gp);
         g.fillRect(0,0,w,h);
+    }
+
+    refreshPolygons() {
+
     }
 
 }

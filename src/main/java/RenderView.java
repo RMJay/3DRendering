@@ -9,17 +9,23 @@ import Graphics.*;
 
 public class RenderView extends JPanel {
 
-    enum Mode { POLYGONS, TEXTURE }
+    enum Mode { POLYGONS, FLAT, INTERPOLATED }
 
     private Mode mode = Mode.POLYGONS;
     private Model model = null;
     private Polygon[] polygons = null;
+    private int[][] textureData = null;
     private Rectangle modelBounds = null;
     private AffineTransform3D transform = AffineTransform3D.identity().rotatedBy(Math.PI, 0.0);
     private AffineTransform centerAndScale = null;
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+        System.out.println(String.format("Mode set to: %s", mode.toString()));
     }
 
     @Override
@@ -44,12 +50,17 @@ public class RenderView extends JPanel {
 
     public void refreshPolygons() {
         Model modelInSceneCoords = model.applying(transform);
+        int numPolygons = modelInSceneCoords.triangles.length;
 
-        Polygon[] polygons = new Polygon[modelInSceneCoords.triangles.length];
-        for (int i = 0; i < modelInSceneCoords.triangles.length; i++) {
+        Polygon[] polygons = new Polygon[numPolygons];
+        int[][] textureData = new int[numPolygons][3];
+        for (int i = 0; i < numPolygons; i++) {
             polygons[i] = makePolygonFrom(modelInSceneCoords.triangles[i]);
+            textureData[i] = modelInSceneCoords.getTextureDataForTriangle(i);
         }
         this.polygons = polygons;
+        this.textureData = textureData;
+
         Rectangle bounds = null;
         for (int i = 0; i < polygons.length; i++) {
             Rectangle b = polygons[i].getBounds();
@@ -75,9 +86,11 @@ public class RenderView extends JPanel {
             case POLYGONS:
                 renderModelPolygons(g);
                 break;
-            case TEXTURE:
-                renderModelTexture(g);
+            case FLAT:
+                renderModelFlat(g);
                 break;
+            case INTERPOLATED:
+                renderModelInterpolated(g);
         }
     }
 
@@ -93,7 +106,18 @@ public class RenderView extends JPanel {
         }
     }
 
-    void renderModelTexture(Graphics2D g) {
+    void renderModelFlat(Graphics2D g) {
+        if (polygons != null) {
+            g.setTransform(centerAndScale);
+            for (int i = 0; i < polygons.length; i++) {
+                int greyscale = (textureData[i][0] + textureData[i][1] + textureData[i][2]) / 3;
+                g.setColor(new Color(greyscale,greyscale,greyscale));
+                g.fillPolygon(polygons[i]);
+            }
+        }
+    }
+
+    void renderModelInterpolated(Graphics2D g) {
         //not implemented
     }
 

@@ -22,6 +22,7 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
         topBar.setBackground(Colors.orchid);
         modeSelector = new JComboBox<>(RenderView.Mode.values());
         topBar.add(modeSelector);
+        modeSelector.addActionListener(this);
 
         this.renderView = renderView;
         add(renderView, BorderLayout.CENTER);
@@ -81,7 +82,6 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
-        System.out.println(String.format("Mouse event button=%d", drag.button));
         double deltaX = mouseEvent.getX() - drag.start.x;
         double deltaY = mouseEvent.getY() - drag.start.y;
         drag.start = mouseEvent.getPoint();
@@ -106,7 +106,11 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == modeSelector) {
+            RenderView.Mode selected = (RenderView.Mode)modeSelector.getSelectedItem();
+            renderView.setMode(selected);
+            renderView.repaint();
+        }
     }
 }

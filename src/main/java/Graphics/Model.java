@@ -19,4 +19,8 @@ public class Model {
         return new Model(transformed);
     }
 
+    public int[] getTextureDataForTriangle(int i) {
+        return new int[]{triangles[i].g1, triangles[i].g2, triangles[i].g3};
+    }
+
 }

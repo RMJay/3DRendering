@@ -8,22 +8,29 @@ import java.util.ArrayList;
 
 public class ModelReader {
 
-    private FileReader fr;
-    private StreamTokenizer in;
+    private FileReader frShape;
+    private FileReader frTexture;
+    private StreamTokenizer inShape;
+    private StreamTokenizer inTexture;
 
     public Model read(String shapeDataFilename, String textureDataFilename) {
         try {
-            fr = new FileReader(shapeDataFilename);
-            in = new StreamTokenizer(fr);
+            frShape = new FileReader(shapeDataFilename);
+            inShape = new StreamTokenizer(frShape);
+
+            frTexture = new FileReader(textureDataFilename);
+            inTexture = new StreamTokenizer(frTexture);
 
             ArrayList<Triangle> triangleAccumulator = new ArrayList<Triangle>();
             int lineNo = 0;
-            while (in.ttype != in.TT_EOF) {
+            while (inShape.ttype != inShape.TT_EOF) {
                 Point3D v1 = readPoint();
                 Point3D v2 = readPoint();
                 Point3D v3 = readPoint();
-                Triangle t = new Triangle(v1, v2, v3);
-                //  System.out.println(String.format("%d: %s", lineNo, t.toString()));
+                int g1 = readGreyscale();
+                int g2 = readGreyscale();
+                int g3 = readGreyscale();
+                Triangle t = new Triangle(v1, v2, v3, g1, g2, g3);
                 triangleAccumulator.add(t);
             }
 
@@ -40,14 +47,20 @@ public class ModelReader {
         return null;
     }
 
-    public Point3D readPoint() throws IOException {
-        in.nextToken();
-        int lineNo = in.lineno();
-        double x = in.nval;
-        in.nextToken();
-        double y = in.nval;
-        in.nextToken();
-        double z = in.nval;
+    Point3D readPoint() throws IOException {
+        inShape.nextToken();
+        int lineNo = inShape.lineno();
+        double x = inShape.nval;
+        inShape.nextToken();
+        double y = inShape.nval;
+        inShape.nextToken();
+        double z = inShape.nval;
         return new Point3D(lineNo, x, y, z);
+    }
+
+    int readGreyscale() throws IOException {
+        inTexture.nextToken();
+        Double val = inTexture.nval;
+        return val.intValue();
     }
 }

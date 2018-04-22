@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+
 import Graphics.*;
 
 public class Application {
@@ -20,13 +20,14 @@ public class Application {
         String textureDataFilename = "face-texture.txt";
         ModelReader mr = new ModelReader();
         Model face = mr.read(shapeDataFilename, textureDataFilename);
+        View view = new View();
 
-//        View view = new View(face);
-//
-//        Container pane = f.getContentPane();
-//        pane.add(view, BorderLayout.CENTER);
-//
-//        f.setVisible(true);
+        Controller controller = new Controller(view, face);
+
+        Container pane = f.getContentPane();
+        pane.add(view, BorderLayout.CENTER);
+
+        f.setVisible(true);
     }
 
 }

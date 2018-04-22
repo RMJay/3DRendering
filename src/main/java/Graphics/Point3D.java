@@ -1,7 +1,7 @@
 package Graphics;
 
 public class Point3D {
-    public int id; //equal to line number in data file
+    public final int id; //equal to line number in data file
     public final double x, y, z;
 
     public Point3D(int id, double x, double y, double z) {
@@ -11,8 +11,25 @@ public class Point3D {
         this.z = z;
     }
 
+    public int intX() {
+        return (int)Math.round(x);
+    }
+
+    public int intY() {
+        return (int)Math.round(y);
+    }
+
     @Override
     public String toString() {
         return String.format("Point{id:%d, x:%g, y:%g, z:%g}", id, x, y, z);
+    }
+
+    Point3D applying(AffineTransform3D transform) {
+        final double[][] a = transform.matrix;
+        final double[] h = { x, y, z, 1.0 }; //homogenous form
+        double xNew = h[0]*a[0][0] + h[1]*a[1][0] + h[2]*a[2][0] + h[3]*a[3][0];
+        double yNew = h[0]*a[0][1] + h[1]*a[1][1] + h[2]*a[2][1] + h[3]*a[3][1];
+        double zNew = h[0]*a[0][2] + h[1]*a[1][2] + h[2]*a[2][2] + h[3]*a[3][2];
+        return new Point3D(id, xNew, yNew, zNew);
     }
 }

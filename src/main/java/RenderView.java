@@ -7,7 +7,7 @@ import java.awt.geom.Line2D;
 
 import Graphics.*;
 
-public class View extends JPanel {
+public class RenderView extends JPanel {
 
     enum Mode { POLYGONS, TEXTURE }
 
@@ -16,13 +16,7 @@ public class View extends JPanel {
     private Polygon[] polygons = null;
     private Rectangle modelBounds = null;
     private AffineTransform3D transform = AffineTransform3D.identity().rotatedBy(Math.PI, 0.0);
-    private AffineTransform centerAndScale;
-    private DragObject drag = null;
-
-    public View() {
-        super();
-
-    }
+    private AffineTransform centerAndScale = null;
 
     public void setModel(Model model) {
         this.model = model;
@@ -110,6 +104,11 @@ public class View extends JPanel {
         }
     }
 
+    void centerAndScale() {
+        refreshPolygons();
+        centerAndScale = centerAndScaleBasedOn(modelBounds, getBounds());
+    }
+
     AffineTransform centerAndScaleBasedOn(Rectangle modelBounds, Rectangle panelBounds) {
         double fw = 0.8 * (double)panelBounds.width / modelBounds.width;
         double fh = 0.8 * (double)panelBounds.height / modelBounds.height;
@@ -123,6 +122,23 @@ public class View extends JPanel {
         tr.translate(tx, ty);
         tr.scale(f, -f);
         return tr;
+    }
+
+    void rotateBy(double radX, double radY) {
+        transform = transform.rotatedBy(radX, radY);
+        refreshPolygons();
+        repaint();
+    }
+
+    void scrollBy(double deltaX, double deltaY) {
+        double scale = centerAndScale.getScaleX();
+        centerAndScale.translate(deltaX/scale, -deltaY/scale);
+        repaint();
+    }
+
+    void zoomBy(double factor) {
+        centerAndScale.scale(factor, factor);
+        repaint();
     }
 
 }

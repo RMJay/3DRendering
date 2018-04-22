@@ -1,39 +1,54 @@
 import Graphics.Model;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
+import Graphics.*;
 
-public class Controller implements ComponentListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class Controller extends JPanel implements ComponentListener, MouseListener, MouseMotionListener, MouseWheelListener, ActionListener {
 
-    View view;
+    private JPanel topBar;
+    private JComboBox<RenderView.Mode> modeSelector;
+    private RenderView renderView;
+    private DragObject drag = null;
 
-    Controller(View view, Model model) {
-        this.view = view;
-        view.setModel(model;
-        view.addComponentListener(this);
-        view.addMouseListener(this);
-        view.addMouseMotionListener(this);
-        view.addMouseWheelListener(this);
+    Controller(RenderView renderView, Model model) {
+        setLayout(new BorderLayout());
+        JPanel topBar = new JPanel();
+        add(topBar, BorderLayout.PAGE_START);
+
+        Label modePrompt = new Label("Render mode", Label.LEFT);
+        topBar.add(modePrompt);
+        topBar.setBackground(Colors.orchid);
+        modeSelector = new JComboBox<>(RenderView.Mode.values());
+        topBar.add(modeSelector);
+
+        this.renderView = renderView;
+        add(renderView, BorderLayout.CENTER);
+        renderView.setModel(model);
+        renderView.addComponentListener(this);
+        renderView.addMouseListener(this);
+        renderView.addMouseMotionListener(this);
+        renderView.addMouseWheelListener(this);
     }
 
     //==================================================================================================================
 
     @Override
     public void componentResized(ComponentEvent componentEvent) {
-        refreshPolygons();
-        centerAndScaleBasedOn(modelBounds, getBounds());
+        renderView.centerAndScale();
     }
 
     @Override
     public void componentMoved(ComponentEvent componentEvent) {
-        refreshPolygons();
-        centerAndScale = centerAndScaleBasedOn(modelBounds, getBounds());
+        renderView.centerAndScale();
     }
 
     @Override
     public void componentShown(ComponentEvent componentEvent) {
-        refreshPolygons();
-        centerAndScale = centerAndScaleBasedOn(modelBounds, getBounds());
+        renderView.centerAndScale();
     }
+
     public void componentHidden(ComponentEvent componentEvent) {
 
     }
@@ -46,6 +61,7 @@ public class Controller implements ComponentListener, MouseListener, MouseMotion
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
         drag = new DragObject(mouseEvent);
+
     }
 
     @Override
@@ -70,15 +86,11 @@ public class Controller implements ComponentListener, MouseListener, MouseMotion
         double deltaY = mouseEvent.getY() - drag.start.y;
         drag.start = mouseEvent.getPoint();
         if (drag.button == MouseEvent.BUTTON1) {
-            double radX = deltaX / getWidth();
-            double radY = deltaY / getWidth();
-            transform = transform.rotatedBy(radX, radY);
-            refreshPolygons();
-            repaint();
+            double radX = deltaX / renderView.getWidth();
+            double radY = deltaY / renderView.getWidth();
+            renderView.rotateBy(radX, radY);
         } else if (drag.button == MouseEvent.BUTTON2) {
-            double scale = centerAndScale.getScaleX();
-            centerAndScale.translate(deltaX/scale, -deltaY/scale);
-            repaint();
+            renderView.scrollBy(deltaX, deltaY);
         }
     }
 
@@ -87,13 +99,14 @@ public class Controller implements ComponentListener, MouseListener, MouseMotion
 
     }
 
-    //==================================================================================================================
-
     @Override
     public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
         double factor = 1.0 - (double)mouseWheelEvent.getUnitsToScroll() / 100.0;
-        centerAndScale.scale(factor, factor);
-        repaint();
+        renderView.zoomBy(factor);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+
+    }
 }

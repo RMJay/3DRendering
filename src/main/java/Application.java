@@ -20,12 +20,12 @@ public class Application {
         String textureDataFilename = "face-texture.txt";
         ModelReader mr = new ModelReader();
         Model face = mr.read(shapeDataFilename, textureDataFilename);
-        View view = new View();
+        RenderView renderView = new RenderView();
 
-        Controller controller = new Controller(view, face);
+        Controller controller = new Controller(renderView, face);
 
         Container pane = f.getContentPane();
-        pane.add(view, BorderLayout.CENTER);
+        pane.add(controller, BorderLayout.CENTER);
 
         f.setVisible(true);
     }

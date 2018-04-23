@@ -30,9 +30,9 @@ public class ModelReader {
                 int g1 = readGreyscale();
                 int g2 = readGreyscale();
                 int g3 = readGreyscale();
-                Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
                 Vector3D v1toV3 = Vector3D.vectorFromTo(v1, v3);
-                Vector3D normal = Vector3D.crossProductAndNormalise(v1toV2, v1toV3);
+                Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
+                Vector3D normal = Vector3D.crossProductAndNormalise(v1toV3, v1toV2);
                 Triangle3D t = new Triangle3D(v1, v2, v3, normal, TriangleLabel.FACE);
                 triangleAccumulator.add(t);
             }

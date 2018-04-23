@@ -23,7 +23,7 @@ public class Point3D {
         return String.format("Point{x:%g, y:%g, z:%g}", x, y, z);
     }
 
-    Point3D applying(AffineTransform3D transform) {
+    public Point3D applying(AffineTransform3D transform) {
         final double[][] a = transform.matrix;
         final double[] h = { x, y, z, 1.0 }; //homogenous form
         double xNew = h[0]*a[0][0] + h[1]*a[1][0] + h[2]*a[2][0] + h[3]*a[3][0];

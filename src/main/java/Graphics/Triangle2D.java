@@ -15,7 +15,7 @@ public class Triangle2D {
         int[] xPoints = { t.v1.intX(), t.v2.intX(), t.v3.intX() };
         int[] yPoints = { t.v1.intY(), t.v2.intY(), t.v3.intY() };
         polygon = new Polygon(xPoints, yPoints, numPoints);
-        z = t.centroidZ();
+        z = t.getCentroidZ();
         this.stroke = stroke;
         this.fill = fill;
     }

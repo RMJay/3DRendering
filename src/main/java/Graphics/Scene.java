@@ -12,7 +12,7 @@ public class Scene {
     public Scene(Face face) {
         this.face = face;
         light = new Sphere(8000);
-        lightSource = new Point3D(100000.0, 100000.0, 100000.0);
+        lightSource = new Point3D(100000.0, 100000.0, 200000.0);
         numTriangles = face.triangles.length + light.triangles.length;
     }
 

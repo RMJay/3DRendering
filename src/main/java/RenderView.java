@@ -25,7 +25,6 @@ public class RenderView extends JPanel {
 
     public void setMode(Mode mode) {
         this.mode = mode;
-        System.out.println(String.format("Mode set to: %s", mode.toString()));
     }
 
     @Override
@@ -95,7 +94,9 @@ public class RenderView extends JPanel {
         Color fill;
         Color stroke;
         if (t.label == TriangleLabel.FACE) {
-            Vector3D directionToLightSource = Vector3D.vectorFromTo(t.centroid(), scene.getLightSource()).normalized();
+            Point3D lightSource = scene.getLightSource().applying(transform);
+            Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
+            Vector3D normal = t.normal;
             double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
             int greyscale = (int)Math.round(dotProduct * 255);
             if (greyscale < 0) {

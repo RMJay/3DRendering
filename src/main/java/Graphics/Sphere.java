@@ -32,15 +32,15 @@ public class Sphere {
                 Point3D v3 = points[i-1][j%(2*N)];
                 Point3D v4 = points[i-1][(j+1)%(2*N)];
                 if (i < N) {
-                    Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
                     Vector3D v1toV3 = Vector3D.vectorFromTo(v1, v3);
+                    Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
                     Vector3D normal = Vector3D.crossProductAndNormalise(v1toV2, v1toV3);
                     triangles[k] = new Triangle3D(v1, v2, v3, normal, TriangleLabel.LIGHT);
                     k++;
                 }
                 if (i > 1) {
-                    Vector3D v2toV4 = Vector3D.vectorFromTo(v2, v4);
                     Vector3D v2toV3 = Vector3D.vectorFromTo(v2, v3);
+                    Vector3D v2toV4 = Vector3D.vectorFromTo(v2, v4);
                     Vector3D normal = Vector3D.crossProductAndNormalise(v2toV4, v2toV3);
                     triangles[k] = new Triangle3D(v2, v4, v3, normal, TriangleLabel.LIGHT);
                     k++;

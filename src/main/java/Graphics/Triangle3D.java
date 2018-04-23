@@ -16,11 +16,11 @@ public class Triangle3D {
         this.label = label;
     }
 
-    public double centroidZ() {
+    public double getCentroidZ() {
         return (v1.z + v2.z + v3.z) / 3.0;
     }
 
-    public Point3D centroid() {
+    public Point3D getCentroid() {
         double cX = (v1.x + v2.x + v3.x) / 3.0;
         double cY = (v1.y + v2.y + v3.y) / 3.0;
         double cZ = (v1.z + v2.z + v3.z) / 3.0;
@@ -33,7 +33,7 @@ public class Triangle3D {
     }
 
     public Triangle3D applying(AffineTransform3D transform) {
-        return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform), normal.applying(transform), label);
+        return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform) , normal.applying(transform), label);
     }
 
 }

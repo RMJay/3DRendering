@@ -88,7 +88,7 @@ public class RenderView extends JPanel {
         p[8] = new Point(500, 220);
 
         Triangle2D[] triangles = new Triangle2D[3];
-        triangles[2] = new Triangle2D(p[6], p[7], p[8], 100, Colors.spring, null);
+        triangles[2] = new Triangle2D(p[6], p[7], p[8], 400, Colors.spring, null);
         triangles[1] = new Triangle2D(p[3], p[4], p[5], 200, Colors.grape, null);
         triangles[0] = new Triangle2D(p[0], p[1], p[2], 300, Colors.tangerine, null);
         this.triangles = triangles;

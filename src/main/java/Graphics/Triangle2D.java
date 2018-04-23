@@ -7,6 +7,7 @@ import java.util.Comparator;
 public class Triangle2D {
 
     private final Point[] points;
+    private final Line2DNormalForm[] lines;
     private final double z;
     private final int strokeRGB;
     private final int fillRGB;
@@ -23,7 +24,12 @@ public class Triangle2D {
 //    }
 
     public Triangle2D(Point p1, Point p2, Point p3, double z, Color fill, Color stroke) {
-        this.points = new Point[]{ p1, p2, p3 };
+        points = new Point[]{ p1, p2, p3 };
+        Line2DNormalForm[] lines = new Line2DNormalForm[3];
+        lines[0] = Line2DNormalForm.lineThrough(p1, p2);
+        lines[1] = Line2DNormalForm.lineThrough(p2, p3);
+        lines[2] = Line2DNormalForm.lineThrough(p3, p1);
+        this.lines = lines;
         this.z = z;
         if (fill != null) {
             fillRGB = fill.getRGB();
@@ -60,23 +66,23 @@ public class Triangle2D {
         bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
 
-    public static final Comparator<Triangle2D> ZComparator = new Comparator<Triangle2D>() {
-        @Override
-        public int compare(Triangle2D t1, Triangle2D t2) {
-            if (t1 == null || t2 == null) {
-                System.out.println("why is there a null in here?");
-                return 0;
-            }
-            double delta = t1.z - t2.z;
-            if (delta > 0) {
-                return -1;
-            } else if (delta < 0) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    };
+//    public static final Comparator<Triangle2D> ZComparator = new Comparator<Triangle2D>() {
+//        @Override
+//        public int compare(Triangle2D t1, Triangle2D t2) {
+//            if (t1 == null || t2 == null) {
+//                System.out.println("why is there a null in here?");
+//                return 0;
+//            }
+//            double delta = t1.z - t2.z;
+//            if (delta > 0) {
+//                return -1;
+//            } else if (delta < 0) {
+//                return 1;
+//            } else {
+//                return 0;
+//            }
+//        }
+//    };
 
     public Rectangle getBounds() {
         return new Rectangle(bounds);
@@ -92,17 +98,29 @@ public class Triangle2D {
 //    }
 
     public void drawInto(BufferedImage pixels, ZBuffer zBuffer) {
-        System.out.println(String.format("fillRGB=%d", fillRGB));
-        if (fillRGB < 0) {
-            System.out.println("Here");
+        if (fillRGB < 0 || strokeRGB < 0) {
             for (int x = bounds.x; x < (bounds.x + bounds.width); x++) {
                 for (int y = bounds.y; y < (bounds.y + bounds.height); y++) {
-                    if (z < zBuffer.getBufferedZ(x, y)) {
-                        pixels.setRGB(x, y, fillRGB);
-                        zBuffer.setZ(x, y, z);
+                    if (pixelIsWithinTriangle(x, y)) {
+                        if (z < zBuffer.getBufferedZ(x, y)) {
+                            pixels.setRGB(x, y, fillRGB);
+                            zBuffer.setZ(x, y, z);
+                        }
                     }
                 }
             }
         }
+    }
+
+    boolean pixelIsWithinTriangle(int x, int y) {
+        double[] homogenousPoint = new double[] { x, y, 1.0 };
+        return dotProduct(homogenousPoint, lines[0].homos) < 0 &&
+                dotProduct(homogenousPoint, lines[1].homos) < 0 &&
+                dotProduct(homogenousPoint, lines[2].homos) < 0;
+
+    }
+
+    private static double dotProduct(double[] a, double[] b) {
+        return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
     }
 }

@@ -1,26 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Line2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import Graphics.*;
 
 public class RenderView extends JPanel {
 
-    enum Mode { POLYGONS, FLAT, INTERPOLATED }
+    enum Mode { POLYGONS, LAMBERTIAN }
 
     private Mode mode = Mode.POLYGONS;
-    private Model model = null;
-    private Polygon[] polygons = null;
+    private Scene scene = null;
+    private Triangle2D[] triangles = null;
     private int[][] textureData = null;
     private Rectangle modelBounds = null;
     private AffineTransform3D transform = AffineTransform3D.identity().rotatedBy(Math.PI, 0.0);
     private AffineTransform centerAndScale = null;
 
-    public void setModel(Model model) {
-        this.model = model;
+    public void setFace(Face face) {
+        this.scene = new Scene(face);
     }
 
     public void setMode(Mode mode) {
@@ -48,77 +48,73 @@ public class RenderView extends JPanel {
         g.fillRect(0,0,w,h);
     }
 
-    public void refreshPolygons() {
-        Model modelInSceneCoords = model.applying(transform);
-        int numPolygons = modelInSceneCoords.triangles.length;
+    public void refreshTriangles() {
+        Iterator<Triangle3D> it = scene.getTriangles();
 
-        Polygon[] polygons = new Polygon[numPolygons];
-        int[][] textureData = new int[numPolygons][3];
-        for (int i = 0; i < numPolygons; i++) {
-            polygons[i] = makePolygonFrom(modelInSceneCoords.triangles[i]);
-            textureData[i] = modelInSceneCoords.getTextureDataForTriangle(i);
+        Triangle2D[] triangles = new Triangle2D[scene.numTriangles];
+        int i = 0;
+        Triangle2D triangle2D;
+        while (i < scene.numTriangles) {
+            if (mode == Mode.LAMBERTIAN) {
+                triangle2D = lambertianModeTriangle2D(it.next().applying(transform));
+            } else {
+                triangle2D = polygonModeTriangle2D(it.next().applying(transform));
+            }
+            triangles[i] = triangle2D;
+            i++;
         }
-        this.polygons = polygons;
-        this.textureData = textureData;
+        Arrays.sort(triangles, Triangle2D.ZComparator);
+        this.triangles = triangles;
 
         Rectangle bounds = null;
-        for (int i = 0; i < polygons.length; i++) {
-            Rectangle b = polygons[i].getBounds();
+        for (int j = 0; j < triangles.length; j++) {
+            Rectangle b = triangles[j].getBounds();
             if (bounds == null) {
                 bounds = b;
             } else {
-                Rectangle.union(bounds, polygons[i].getBounds(), bounds);
+                Rectangle.union(bounds, triangles[j].getBounds(), bounds);
             }
         }
         modelBounds = bounds;
     }
 
-    Polygon makePolygonFrom(Triangle t) {
-        int numPoints = 3;
-        int[] xPoints = { t.v1.intX(), t.v2.intX(), t.v3.intX() };
-        int[] yPoints = { t.v1.intY(), t.v2.intY(), t.v3.intY() };
-        return new Polygon(xPoints, yPoints, numPoints);
+    Triangle2D polygonModeTriangle2D(Triangle3D t) {
+        Color fill;
+        Color stroke;
+        if (t.label == TriangleLabel.FACE) {
+            fill = Color.WHITE;
+            stroke = Color.RED;
+        } else {
+            fill = Colors.lemon;
+            stroke = Colors.tangerine;
+        }
+        return new Triangle2D(t, stroke, fill);
+    }
+
+    Triangle2D lambertianModeTriangle2D(Triangle3D t) {
+        Color fill;
+        Color stroke;
+        if (t.label == TriangleLabel.FACE) {
+            Vector3D directionToLightSource = Vector3D.vectorFromTo(t.centroid(), scene.getLightSource()).normalized();
+            double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
+            int greyscale = (int)Math.round(dotProduct * 255);
+            if (greyscale < 0) {
+                greyscale = 0;
+            }
+            fill = new Color(greyscale, greyscale, greyscale);
+            stroke = null;
+        } else {
+            fill = Colors.lemon;
+            stroke = Colors.tangerine;
+        }
+        return new Triangle2D(t, stroke, fill);
     }
 
     void renderModel(Graphics2D g, Mode mode) {
-        System.out.println("Render Mode: " + mode.toString());
-        switch (mode) {
-            case POLYGONS:
-                renderModelPolygons(g);
-                break;
-            case FLAT:
-                renderModelFlat(g);
-                break;
-            case INTERPOLATED:
-                renderModelInterpolated(g);
+        g.setTransform(centerAndScale);
+        for (Triangle2D t : triangles) {
+            t.paintPolygon(g);
         }
-    }
-
-    void renderModelPolygons(Graphics2D g) {
-        if (polygons != null) {
-            g.setTransform(centerAndScale);
-            for (Polygon p : polygons) {
-                g.setColor(Color.WHITE);
-                g.fillPolygon(p);
-                g.setColor(Color.RED);
-                g.drawPolygon(p);
-            }
-        }
-    }
-
-    void renderModelFlat(Graphics2D g) {
-        if (polygons != null) {
-            g.setTransform(centerAndScale);
-            for (int i = 0; i < polygons.length; i++) {
-                int greyscale = (textureData[i][0] + textureData[i][1] + textureData[i][2]) / 3;
-                g.setColor(new Color(greyscale,greyscale,greyscale));
-                g.fillPolygon(polygons[i]);
-            }
-        }
-    }
-
-    void renderModelInterpolated(Graphics2D g) {
-        //not implemented
     }
 
     public void showBounds(Graphics2D g) {
@@ -129,7 +125,7 @@ public class RenderView extends JPanel {
     }
 
     void centerAndScale() {
-        refreshPolygons();
+        refreshTriangles();
         centerAndScale = centerAndScaleBasedOn(modelBounds, getBounds());
     }
 
@@ -150,7 +146,7 @@ public class RenderView extends JPanel {
 
     void rotateBy(double radX, double radY) {
         transform = transform.rotatedBy(radX, radY);
-        refreshPolygons();
+        refreshTriangles();
         repaint();
     }
 

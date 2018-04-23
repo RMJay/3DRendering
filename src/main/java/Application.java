@@ -19,7 +19,7 @@ public class Application {
         String shapeDataFilename = "face-shape.txt";
         String textureDataFilename = "face-texture.txt";
         ModelReader mr = new ModelReader();
-        Model face = mr.read(shapeDataFilename, textureDataFilename);
+        Face face = mr.read(shapeDataFilename, textureDataFilename);
         RenderView renderView = new RenderView();
 
         Controller controller = new Controller(renderView, face);

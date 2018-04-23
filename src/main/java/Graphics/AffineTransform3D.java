@@ -17,7 +17,7 @@ public class AffineTransform3D {
 
     //==================================================================================================================
 
-    AffineTransform3D applying(double[][] transformMatrix) {
+    public AffineTransform3D applying(double[][] transformMatrix) {
         return new AffineTransform3D(crossProduct(matrix, transformMatrix));
     }
 
@@ -39,6 +39,10 @@ public class AffineTransform3D {
         tr[3][1] = ty;
         tr[3][2] = tz;
         return this.applying(tr);
+    }
+
+    public AffineTransform3D translatedBy(Point3D p) {
+        return translatedBy(p.x, p.y, p.z);
     }
 
     public AffineTransform3D rotatedBy(double radX, double radY) {

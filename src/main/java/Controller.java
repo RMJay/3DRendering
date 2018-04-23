@@ -1,5 +1,3 @@
-import Graphics.Model;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +10,7 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
     private RenderView renderView;
     private DragObject drag = null;
 
-    Controller(RenderView renderView, Model model) {
+    Controller(RenderView renderView, Face face) {
         setLayout(new BorderLayout());
         JPanel topBar = new JPanel();
         add(topBar, BorderLayout.PAGE_START);
@@ -26,7 +24,7 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
 
         this.renderView = renderView;
         add(renderView, BorderLayout.CENTER);
-        renderView.setModel(model);
+        renderView.setFace(face);
         renderView.addComponentListener(this);
         renderView.addMouseListener(this);
         renderView.addMouseMotionListener(this);
@@ -110,6 +108,7 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
         if (event.getSource() == modeSelector) {
             RenderView.Mode selected = (RenderView.Mode)modeSelector.getSelectedItem();
             renderView.setMode(selected);
+            renderView.refreshTriangles();
             renderView.repaint();
         }
     }

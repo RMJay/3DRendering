@@ -13,7 +13,7 @@ public class ModelReader {
     private StreamTokenizer inShape;
     private StreamTokenizer inTexture;
 
-    public Model read(String shapeDataFilename, String textureDataFilename) {
+    public Face read(String shapeDataFilename, String textureDataFilename) {
         try {
             frShape = new FileReader(shapeDataFilename);
             inShape = new StreamTokenizer(frShape);
@@ -21,7 +21,7 @@ public class ModelReader {
             frTexture = new FileReader(textureDataFilename);
             inTexture = new StreamTokenizer(frTexture);
 
-            ArrayList<Triangle> triangleAccumulator = new ArrayList<Triangle>();
+            ArrayList<Triangle3D> triangleAccumulator = new ArrayList<Triangle3D>();
             int lineNo = 0;
             while (inShape.ttype != inShape.TT_EOF) {
                 Point3D v1 = readPoint();
@@ -30,14 +30,18 @@ public class ModelReader {
                 int g1 = readGreyscale();
                 int g2 = readGreyscale();
                 int g3 = readGreyscale();
-                Triangle t = new Triangle(v1, v2, v3, g1, g2, g3);
+                Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
+                Vector3D v1toV3 = Vector3D.vectorFromTo(v1, v3);
+                Vector3D normal = Vector3D.crossProductAndNormalise(v1toV2, v1toV3);
+                Triangle3D t = new Triangle3D(v1, v2, v3, normal, TriangleLabel.FACE);
                 triangleAccumulator.add(t);
             }
 
-            Triangle[] triangles = new Triangle[triangleAccumulator.size()];
+            Triangle3D[] triangles = new Triangle3D[triangleAccumulator.size()];
+
             triangles = triangleAccumulator.toArray(triangles);
 
-            return new Model(triangles);
+            return new Face(triangles);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -55,7 +59,7 @@ public class ModelReader {
         double y = inShape.nval;
         inShape.nextToken();
         double z = inShape.nval;
-        return new Point3D(lineNo, x, y, z);
+        return new Point3D(x, y, z);
     }
 
     int readGreyscale() throws IOException {

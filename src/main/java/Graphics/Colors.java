@@ -11,4 +11,8 @@ public class Colors {
     public static final Color orchid = new Color(110,118,255);
     public static final Color tangerine = new Color(255, 136, 2);
     public static final Color lemon = new Color(255, 250, 3);
+    public static final Color grape = new Color(137, 49, 255);
+    public static final Color spring = new Color(5, 248, 2);
+    public static final Color maraschino = new Color(255, 33, 1);
+
 }

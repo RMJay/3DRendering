@@ -42,4 +42,9 @@ public class Vector3D {
     public static double dotProduct(Vector3D v1, Vector3D v2) {
         return v1.dx * v2.dx + v1.dy*v2.dy + v1.dz*v2.dz;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{dx: %g, dy: %g, dz: %g}", dx, dy, dz);
+    }
 }

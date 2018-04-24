@@ -22,15 +22,11 @@ public class Triangle2D {
         lines[2] = Line2DNormalForm.lineThrough(p3, p1);
         this.lines = lines;
         this.z = z;
-        isFrontSide = isAntiClockwise(points);
+        isFrontSide = isClockwise(points);
         if (fill != null) {
-//            if (isFrontSide) {
-                fillRGB = fill.getRGB();
-//            } else {
-//                fillRGB = Colors.grape.getRGB();
-//            }
+            fillRGB = fill.getRGB();
         } else {
-            //int RGB values are negative?
+//            int RGB values are negative?
             fillRGB = 1;
         }
         if (stroke != null) {
@@ -63,36 +59,9 @@ public class Triangle2D {
                 (int)Math.ceil(maxX - minX), (int)Math.ceil(maxY - minY));
     }
 
-//    public static final Comparator<Triangle2D> ZComparator = new Comparator<Triangle2D>() {
-//        @Override
-//        public int compare(Triangle2D t1, Triangle2D t2) {
-//            if (t1 == null || t2 == null) {
-//                System.out.println("why is there a null in here?");
-//                return 0;
-//            }
-//            double delta = t1.z - t2.z;
-//            if (delta > 0) {
-//                return -1;
-//            } else if (delta < 0) {
-//                return 1;
-//            } else {
-//                return 0;
-//            }
-//        }
-//    };
-
     public Rectangle getBounds() {
         return new Rectangle(bounds);
     }
-
-//    public void paintPolygon(Graphics2D g) {
-//        g.setColor(fill);
-//        g.fillPolygon(polygon);
-//        if (stroke != null) {
-//            g.setColor(stroke);
-//            g.drawPolygon(polygon);
-//        }
-//    }
 
     public void drawInto(MyContext context) {
         Rectangle intersect = context.bounds.intersection(bounds);
@@ -116,13 +85,13 @@ public class Triangle2D {
     boolean pixelIsWithinTriangle(int x, int y) {
         double[] homogenousPoint = new double[] { x, y, 1.0 };
         if (isFrontSide) {
-            return dotProduct(homogenousPoint, lines[0].homos) > 0 &&
-                    dotProduct(homogenousPoint, lines[1].homos) > 0 &&
-                    dotProduct(homogenousPoint, lines[2].homos) > 0;
+            return dotProduct(homogenousPoint, lines[0].homos) < 1 &&
+                    dotProduct(homogenousPoint, lines[1].homos) < 1 &&
+                    dotProduct(homogenousPoint, lines[2].homos) < 1;
         } else {
-            return dotProduct(homogenousPoint, lines[0].homos) < 0 &&
-                    dotProduct(homogenousPoint, lines[1].homos) < 0 &&
-                    dotProduct(homogenousPoint, lines[2].homos) < 0;
+            return dotProduct(homogenousPoint, lines[0].homos) > -1 &&
+                    dotProduct(homogenousPoint, lines[1].homos) > -1 &&
+                    dotProduct(homogenousPoint, lines[2].homos) > -1;
         }
 
     }
@@ -131,11 +100,11 @@ public class Triangle2D {
         return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
     }
 
-    private static boolean isAntiClockwise(Point2D[] points) {
+    private static boolean isClockwise(Point2D[] points) {
         int sum = 0;
         for (int i = 0; i < 3; i++) {
             sum += (points[(i+1)%3].x - points[i].x)*(points[(i+1)%3].y + points[i].y);
         }
-        return sum < 0;
+        return sum > 0;
     }
 }

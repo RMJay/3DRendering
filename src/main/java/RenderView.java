@@ -14,8 +14,11 @@ public class RenderView extends JPanel {
     private Triangle2D[] triangles = null;
     private int[][] textureData = null;
     private Rectangle modelBounds = null;
-    private AffineTransform3D sceneTransform = AffineTransform3D.identity().rotatedBy(Math.PI, 0.0);
-    private AffineTransform3D centerAndScale = null;
+    private AffineTransform3D rotation = AffineTransform3D.identity()
+            .rotatedBy(Math.PI, 0.0)
+            .scaledBy(1.0,-1.0,1.0);
+    private AffineTransform3D zoom = AffineTransform3D.identity();
+    private AffineTransform3D scroll = AffineTransform3D.identity();
 
     public void setFace(Face face) {
         this.scene = new Scene(face);
@@ -100,11 +103,12 @@ public class RenderView extends JPanel {
 
     public void refreshTriangles() {
         Iterator<Triangle3D> it = scene.getTriangles();
-        AffineTransform3D transform = AffineTransform3D.identity();
-        transform.concatenateWith(sceneTransform);
-        if (centerAndScale != null) {
-            transform = transform.concatenateWith(centerAndScale);
-        }
+
+        AffineTransform3D transform = AffineTransform3D.identity()
+                .concatenateWith(scroll)
+                .concatenateWith(zoom)
+                .concatenateWith(rotation);
+
 
         Triangle2D[] triangles = new Triangle2D[scene.numTriangles];
         int i = 0;
@@ -112,7 +116,7 @@ public class RenderView extends JPanel {
         while (i < scene.numTriangles) {
             Triangle3D transformed = it.next().applying(transform);
             if (mode == Mode.LAMBERTIAN) {
-                triangle2D = polygonModeTriangle2D(transformed);
+                triangle2D = lambertianModeTriangle2D(transformed);
             } else {
                 triangle2D = polygonModeTriangle2D(transformed);
             }
@@ -146,33 +150,27 @@ public class RenderView extends JPanel {
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), fill, stroke);
     }
 
-//    Triangle2D lambertianModeTriangle2D(Triangle3D t) {
-//        Color fill;
-//        Color stroke;
-//        if (t.label == TriangleLabel.FACE) {
-//            Point3D lightSource = scene.getLightSource().applying(sceneTransform);
-//            Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
-//            Vector3D normal = t.normal;
-//            double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
-//            int greyscale = (int)Math.round(dotProduct * 255);
-//            if (greyscale < 0) {
-//                greyscale = 0;
-//            }
-//            fill = new Color(greyscale, greyscale, greyscale);
-//            stroke = null;
-//        } else {
-//            fill = Colors.lemon;
-//            stroke = Colors.tangerine;
-//        }
-//        return new Triangle2D(t, stroke, fill);
-//    }
+    Triangle2D lambertianModeTriangle2D(Triangle3D t) {
+        Color fill;
+        Color stroke;
+        if (t.label == TriangleLabel.FACE) {
+            Point3D lightSource = scene.getLightSource();
+            Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
+            Vector3D normal = t.normal;
+            double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
+            int greyscale = (int)Math.round(dotProduct * 255);
+            if (greyscale < 0) {
+                greyscale = 0;
+            }
+            fill = new Color(greyscale, greyscale, greyscale);
+            stroke = null;
+        } else {
+            fill = Colors.lemon;
+            stroke = Colors.tangerine;
+        }
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), fill, stroke);
+    }
 
-//    void renderModel(Graphics2D g, Mode mode) {
-//        g.setTransform(centerAndScale);
-//        for (Triangle2D t : triangles) {
-//            t.paintPolygon(g);
-//        }
-//    }
 
     void renderModel(MyContext context) {
         Rectangle dirtyRect = new Rectangle(0, 0, getWidth(), getHeight());
@@ -190,37 +188,33 @@ public class RenderView extends JPanel {
     }
 
     void centerAndScale() {
-        refreshTriangles();
-        centerAndScale = centerAndScaleBasedOn(modelBounds, getBounds());
-    }
+        if (modelBounds != null) {
+            Rectangle panelBounds = getBounds();
+            double fw = 0.8 * (double) panelBounds.width / modelBounds.width;
+            double fh = 0.8 * (double) panelBounds.height / modelBounds.height;
+            double f = fw <= fh ? fw : fh;
+            zoom = zoom.scaledBy(f, f, f);
 
-    AffineTransform3D centerAndScaleBasedOn(Rectangle modelBounds, Rectangle panelBounds) {
-        double fw = 0.8 * (double)panelBounds.width / modelBounds.width;
-        double fh = 0.8 * (double)panelBounds.height / modelBounds.height;
-
-        double f = fw <= fh ? fw : fh;
-
-        double tx = (double)panelBounds.width / 2.0;
-        double ty = (double)panelBounds.height / 2.0;
-
-        return AffineTransform3D.identity().translatedBy(tx, ty, 0.0).scaledBy(f, -f, f);
+            double tx = (double) panelBounds.width / 2.0;
+            double ty = (double) panelBounds.height / 2.0;
+            scroll = AffineTransform3D.identity().translatedBy(tx, ty, 0.0);
+        }
     }
 
     void rotateBy(double radX, double radY) {
-        sceneTransform = sceneTransform.rotatedBy(radX, radY);
+        rotation = rotation.rotatedBy(radX, -radY);
         refreshTriangles();
         repaint();
     }
 
     void scrollBy(double deltaX, double deltaY) {
-        double scale = centerAndScale.getScaleX();
-        centerAndScale = centerAndScale.translatedBy(deltaX, deltaY, 0);
+        scroll = scroll.translatedBy(deltaX, deltaY, 0);
         refreshTriangles();
         repaint();
     }
 
     void zoomBy(double factor) {
-        centerAndScale = centerAndScale.scaledBy(factor);
+        zoom = zoom.scaledBy(factor);
         refreshTriangles();
         repaint();
     }

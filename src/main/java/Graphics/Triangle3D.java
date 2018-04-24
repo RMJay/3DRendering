@@ -47,7 +47,7 @@ public class Triangle3D {
 
     public Triangle3D applying(AffineTransform3D transform) {
         if (transform != null) {
-            return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform), normal.applying(transform), label);
+            return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform), normal, label);
         } else {
             return this;
         }

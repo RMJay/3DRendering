@@ -22,11 +22,11 @@ public class AffineTransform3D {
     //==================================================================================================================
 
     public AffineTransform3D concatenateWith(AffineTransform3D other) {
-        return new AffineTransform3D(crossProduct(matrix, other.matrix));
+        return new AffineTransform3D(crossProduct(other.matrix, matrix));
     }
 
     public AffineTransform3D applying(double[][] transformMatrix) {
-        return new AffineTransform3D(crossProduct(matrix, transformMatrix));
+        return new AffineTransform3D(crossProduct(transformMatrix, matrix));
     }
 
     public AffineTransform3D scaledBy(double scale) {

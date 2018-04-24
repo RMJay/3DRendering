@@ -36,16 +36,19 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
     @Override
     public void componentResized(ComponentEvent componentEvent) {
         renderView.centerAndScale();
+        renderView.refreshTriangles();
     }
 
     @Override
     public void componentMoved(ComponentEvent componentEvent) {
         renderView.centerAndScale();
+        renderView.refreshTriangles();
     }
 
     @Override
     public void componentShown(ComponentEvent componentEvent) {
         renderView.centerAndScale();
+        renderView.refreshTriangles();
     }
 
     public void componentHidden(ComponentEvent componentEvent) {
@@ -108,6 +111,7 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
         if (event.getSource() == modeSelector) {
             RenderView.Mode selected = (RenderView.Mode)modeSelector.getSelectedItem();
             renderView.setMode(selected);
+            renderView.centerAndScale();
             renderView.refreshTriangles();
             renderView.repaint();
         }

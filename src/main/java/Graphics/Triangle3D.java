@@ -1,5 +1,6 @@
 package Graphics;
 
+import java.awt.*;
 import java.util.Comparator;
 
 public class Triangle3D {
@@ -14,6 +15,18 @@ public class Triangle3D {
         this.v3 = v3;
         this.normal = normal;
         this.label = label;
+    }
+
+    public Point2D get2DPoint1() {
+        return new Point2D(v1.x, v1.y);
+    }
+
+    public Point2D get2DPoint2() {
+        return new Point2D(v2.x, v2.y);
+    }
+
+    public Point2D get2DPoint3() {
+        return new Point2D(v3.x, v3.y);
     }
 
     public double getCentroidZ() {
@@ -33,7 +46,11 @@ public class Triangle3D {
     }
 
     public Triangle3D applying(AffineTransform3D transform) {
-        return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform) , normal.applying(transform), label);
+        if (transform != null) {
+            return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform), normal.applying(transform), label);
+        } else {
+            return this;
+        }
     }
 
 }

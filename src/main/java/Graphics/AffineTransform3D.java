@@ -15,7 +15,15 @@ public class AffineTransform3D {
         return new AffineTransform3D(matrix);
     }
 
+    public double getScaleX() {
+        return matrix[0][0];
+    }
+
     //==================================================================================================================
+
+    public AffineTransform3D concatenateWith(AffineTransform3D other) {
+        return new AffineTransform3D(crossProduct(matrix, other.matrix));
+    }
 
     public AffineTransform3D applying(double[][] transformMatrix) {
         return new AffineTransform3D(crossProduct(matrix, transformMatrix));
@@ -26,6 +34,15 @@ public class AffineTransform3D {
         s[0][0] = scale;
         s[1][1] = scale;
         s[2][2] = scale;
+        s[3][3] = 1.0;
+        return this.applying(s);
+    }
+
+    public AffineTransform3D scaledBy(double scaleX, double scaleY, double scaleZ) {
+        double[][] s = new double[4][4];
+        s[0][0] = scaleX;
+        s[1][1] = scaleY;
+        s[2][2] = scaleZ;
         s[3][3] = 1.0;
         return this.applying(s);
     }

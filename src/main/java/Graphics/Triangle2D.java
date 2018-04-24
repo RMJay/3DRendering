@@ -6,33 +6,29 @@ import java.util.Comparator;
 
 public class Triangle2D {
 
-    private final Point[] points;
+    private final boolean isFrontSide;
+    private final Point2D[] points;
     private final Line2DNormalForm[] lines;
     private final double z;
     private final int strokeRGB;
     private final int fillRGB;
     private final Rectangle bounds;
 
-//    public Triangle2D(Triangle3D t, Color stroke, Color fill) {
-//        int numPoints = 3;
-//        int[] xPoints = { t.v1.intX(), t.v2.intX(), t.v3.intX() };
-//        int[] yPoints = { t.v1.intY(), t.v2.intY(), t.v3.intY() };
-//        polygon = new Polygon(xPoints, yPoints, numPoints);
-//        z = t.getCentroidZ();
-//        this.stroke = stroke;
-//        this.fill = fill;
-//    }
-
-    public Triangle2D(Point p1, Point p2, Point p3, double z, Color fill, Color stroke) {
-        points = new Point[]{ p1, p2, p3 };
+    public Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Color fill, Color stroke) {
+        points = new Point2D[]{ p1, p2, p3 };
         Line2DNormalForm[] lines = new Line2DNormalForm[3];
         lines[0] = Line2DNormalForm.lineThrough(p1, p2);
         lines[1] = Line2DNormalForm.lineThrough(p2, p3);
         lines[2] = Line2DNormalForm.lineThrough(p3, p1);
         this.lines = lines;
         this.z = z;
+        isFrontSide = isAntiClockwise(points);
         if (fill != null) {
-            fillRGB = fill.getRGB();
+//            if (isFrontSide) {
+                fillRGB = fill.getRGB();
+//            } else {
+//                fillRGB = Colors.grape.getRGB();
+//            }
         } else {
             //int RGB values are negative?
             fillRGB = 1;
@@ -44,12 +40,12 @@ public class Triangle2D {
             strokeRGB = 1;
         }
 
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
+        double minX = Double.POSITIVE_INFINITY;
+        double minY = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY;
+        double maxY = Double.NEGATIVE_INFINITY;
 
-        for (Point p : points) {
+        for (Point2D p : points) {
             if (p.x < minX) {
                 minX = p.x;
             }
@@ -63,7 +59,8 @@ public class Triangle2D {
                 maxY = p.y;
             }
         }
-        bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        bounds = new Rectangle((int)Math.floor(minX), (int)Math.floor(minY),
+                (int)Math.ceil(maxX - minX), (int)Math.ceil(maxY - minY));
     }
 
 //    public static final Comparator<Triangle2D> ZComparator = new Comparator<Triangle2D>() {
@@ -97,14 +94,18 @@ public class Triangle2D {
 //        }
 //    }
 
-    public void drawInto(BufferedImage pixels, ZBuffer zBuffer) {
+    public void drawInto(MyContext context) {
+        Rectangle intersect = context.bounds.intersection(bounds);
+        int maxX = context.getWidth();
+        int maxY = context.getHeight();
+
         if (fillRGB < 0 || strokeRGB < 0) {
-            for (int x = bounds.x; x < (bounds.x + bounds.width); x++) {
-                for (int y = bounds.y; y < (bounds.y + bounds.height); y++) {
+            for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
+                for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
                     if (pixelIsWithinTriangle(x, y)) {
-                        if (z < zBuffer.getBufferedZ(x, y)) {
-                            pixels.setRGB(x, y, fillRGB);
-                            zBuffer.setZ(x, y, z);
+                        if (z < context.zBuffer.getBufferedZ(x, y)) {
+                            context.pixels.setRGB(x, y, fillRGB);
+                            context.zBuffer.setZ(x, y, z);
                         }
                     }
                 }
@@ -114,13 +115,27 @@ public class Triangle2D {
 
     boolean pixelIsWithinTriangle(int x, int y) {
         double[] homogenousPoint = new double[] { x, y, 1.0 };
-        return dotProduct(homogenousPoint, lines[0].homos) < 0 &&
-                dotProduct(homogenousPoint, lines[1].homos) < 0 &&
-                dotProduct(homogenousPoint, lines[2].homos) < 0;
+        if (isFrontSide) {
+            return dotProduct(homogenousPoint, lines[0].homos) > 0 &&
+                    dotProduct(homogenousPoint, lines[1].homos) > 0 &&
+                    dotProduct(homogenousPoint, lines[2].homos) > 0;
+        } else {
+            return dotProduct(homogenousPoint, lines[0].homos) < 0 &&
+                    dotProduct(homogenousPoint, lines[1].homos) < 0 &&
+                    dotProduct(homogenousPoint, lines[2].homos) < 0;
+        }
 
     }
 
     private static double dotProduct(double[] a, double[] b) {
         return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+    }
+
+    private static boolean isAntiClockwise(Point2D[] points) {
+        int sum = 0;
+        for (int i = 0; i < 3; i++) {
+            sum += (points[(i+1)%3].x - points[i].x)*(points[(i+1)%3].y + points[i].y);
+        }
+        return sum < 0;
     }
 }

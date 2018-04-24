@@ -22,7 +22,7 @@ public class Line2DNormalForm {
         return (int)homos[2];
     }
 
-    static Line2DNormalForm lineThrough(Point p1, Point p2) {
+    static Line2DNormalForm lineThrough(Point2D p1, Point2D p2) {
         double[] p1Homogenous = new double[] { p1.x, p1.y, 1 };
         double[] p2Homogenous = new double[] { p2.x, p2.y, 1 };
         return new Line2DNormalForm(normalized(crossProduct(p1Homogenous, p2Homogenous)));

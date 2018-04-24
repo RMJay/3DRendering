@@ -7,7 +7,7 @@ import Graphics.*;
 
 public class RenderView extends JPanel {
 
-    enum Mode { POLYGONS, LAMBERTIAN }
+    enum Mode { POLYGONS, FLAT }
 
     private Mode mode = Mode.POLYGONS;
     private Scene scene = null;
@@ -115,8 +115,8 @@ public class RenderView extends JPanel {
         Triangle2D triangle2D;
         while (i < scene.numTriangles) {
             Triangle3D transformed = it.next().applying(transform);
-            if (mode == Mode.LAMBERTIAN) {
-                triangle2D = lambertianModeTriangle2D(transformed);
+            if (mode == Mode.FLAT) {
+                triangle2D = flatModeTriangle2D(transformed);
             } else {
                 triangle2D = polygonModeTriangle2D(transformed);
             }
@@ -150,7 +150,7 @@ public class RenderView extends JPanel {
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), fill, stroke);
     }
 
-    Triangle2D lambertianModeTriangle2D(Triangle3D t) {
+    Triangle2D flatModeTriangle2D(Triangle3D t) {
         Color fill;
         Color stroke;
         if (t.label == TriangleLabel.FACE) {

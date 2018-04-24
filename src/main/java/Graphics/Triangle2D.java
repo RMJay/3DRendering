@@ -6,6 +6,8 @@ import java.util.Comparator;
 
 public class Triangle2D {
 
+    enum PixelType { EDGE, INSIDE, OUTSIDE }
+
     private final boolean isFrontSide;
     private final Point2D[] points;
     private final Line2DNormalForm[] lines;
@@ -26,14 +28,12 @@ public class Triangle2D {
         if (fill != null) {
             fillRGB = fill.getRGB();
         } else {
-//            int RGB values are negative?
-            fillRGB = 1;
+            fillRGB = 1; //because RGB values are negative
         }
         if (stroke != null) {
             strokeRGB = stroke.getRGB();
         } else {
-            //int RGB values are negative?
-            strokeRGB = 1;
+            strokeRGB = 1; //because int RGB values are negative
         }
 
         double minX = Double.POSITIVE_INFINITY;
@@ -71,7 +71,20 @@ public class Triangle2D {
         if (fillRGB < 0 || strokeRGB < 0) {
             for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
                 for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
-                    if (pixelIsWithinTriangle(x, y)) {
+                    PixelType pix = pixelType(x, y);
+                    if (strokeRGB < 0) {
+                        if (pix == PixelType.EDGE) {
+                            if (z < context.zBuffer.getBufferedZ(x, y)) {
+                                context.pixels.setRGB(x, y, strokeRGB);
+                                context.zBuffer.setZ(x, y, z);
+                            }
+                        } else if (pix == PixelType.INSIDE) {
+                            if (z < context.zBuffer.getBufferedZ(x, y)) {
+                                context.pixels.setRGB(x, y, fillRGB);
+                                context.zBuffer.setZ(x, y, z);
+                            }
+                        }
+                    } else if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
                         if (z < context.zBuffer.getBufferedZ(x, y)) {
                             context.pixels.setRGB(x, y, fillRGB);
                             context.zBuffer.setZ(x, y, z);
@@ -82,16 +95,27 @@ public class Triangle2D {
         }
     }
 
-    boolean pixelIsWithinTriangle(int x, int y) {
+    PixelType pixelType(int x, int y) {
         double[] homogenousPoint = new double[] { x, y, 1.0 };
+        double dot1 = dotProduct(homogenousPoint, lines[0].homos);
+        double dot2 = dotProduct(homogenousPoint, lines[1].homos);
+        double dot3 = dotProduct(homogenousPoint, lines[2].homos);
         if (isFrontSide) {
-            return dotProduct(homogenousPoint, lines[0].homos) < 1 &&
-                    dotProduct(homogenousPoint, lines[1].homos) < 1 &&
-                    dotProduct(homogenousPoint, lines[2].homos) < 1;
+            if (dot1 < 0.5 && dot2 < 0.5 && dot3 < 0.5) {
+                if (dot1 > -0.5 || dot2 > -0.5 || dot3 > -0.5) {
+                    return PixelType.EDGE;
+                }
+                return PixelType.INSIDE;
+            }
+            return PixelType.OUTSIDE;
         } else {
-            return dotProduct(homogenousPoint, lines[0].homos) > -1 &&
-                    dotProduct(homogenousPoint, lines[1].homos) > -1 &&
-                    dotProduct(homogenousPoint, lines[2].homos) > -1;
+            if (dot1 > -0.5 && dot2 > -0.5 && dot3 > -0.5) {
+                if (dot1 < 0.5 || dot2 < 0.5 || dot3 < 0.5) {
+                    return PixelType.EDGE;
+                }
+                return PixelType.INSIDE;
+            }
+            return PixelType.OUTSIDE;
         }
 
     }

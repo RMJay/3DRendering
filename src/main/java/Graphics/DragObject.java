@@ -1,10 +1,12 @@
+package Graphics;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class DragObject {
 
-    int button;
-    Point start;
+    public int button;
+    public Point start;
 
     public DragObject(MouseEvent event) {
         button = event.getButton();

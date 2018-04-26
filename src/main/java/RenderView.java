@@ -222,7 +222,6 @@ public class RenderView extends JPanel {
     }
 
     public void moveLight(double dxScreen, double dyScreen) {
-        System.out.println("move light");
         Vector3D displacementScreen = new Vector3D(dxScreen, dyScreen, 0.0);
         AffineTransform3D transform = AffineTransform3D.identity()
                 .concatenateWith(rotation);

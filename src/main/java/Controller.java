@@ -12,7 +12,7 @@ public class Controller extends JPanel implements ComponentListener, MouseListen
 
     Controller(RenderView renderView, Face face) {
         setLayout(new BorderLayout());
-        JPanel topBar = new JPanel();
+        topBar = new JPanel();
         add(topBar, BorderLayout.PAGE_START);
 
         Label modePrompt = new Label("Render mode", Label.LEFT);

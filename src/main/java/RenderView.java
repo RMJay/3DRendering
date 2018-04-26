@@ -7,7 +7,7 @@ import Graphics.*;
 
 public class RenderView extends JPanel {
 
-    enum Mode { POLYGONS, FLAT }
+    enum Mode { POLYGONS, FLAT, Z_BUFFER }
 
     private Mode mode = Mode.POLYGONS;
     private Scene scene = null;
@@ -36,6 +36,9 @@ public class RenderView extends JPanel {
         MyContext context = new MyContext(w, h);
         paintBackground(context);
         renderModel(context);
+        if (mode == Mode.Z_BUFFER) {
+            context.drawZBuffer();
+        }
         showSceneBounds(context);
         g.drawImage(context.pixels,0 , 0, null);
     }
@@ -71,20 +74,20 @@ public class RenderView extends JPanel {
 
 //    //For testing
 //    public void refreshTriangles() {
-//        Point[] p = new Point[9];
-//        p[0] = new Point(100, 700);
-//        p[1] = new Point(700, 500);
-//        p[2] = new Point(200, 100);
-//        p[3] = new Point(120, 300);
-//        p[4] = new Point(390, 680);
-//        p[5] = new Point(720, 370);
-//        p[6] = new Point(250, 540);
-//        p[7] = new Point(520, 620);
-//        p[8] = new Point(500, 220);
+//        Point2D[] p = new Point2D[9];
+//        p[0] = new Point2D(100, 700);
+//        p[1] = new Point2D(700, 500);
+//        p[2] = new Point2D(200, 100);
+//        p[3] = new Point2D(120, 300);
+//        p[4] = new Point2D(390, 680);
+//        p[5] = new Point2D(720, 370);
+//        p[6] = new Point2D(250, 540);
+//        p[7] = new Point2D(520, 620);
+//        p[8] = new Point2D(500, 220);
 //
 //        Triangle2D[] triangles = new Triangle2D[3];
-//        triangles[2] = new Triangle2D(p[6], p[7], p[8], 100, Colors.spring, null);
-//        triangles[1] = new Triangle2D(p[3], p[4], p[5], 200, Colors.maraschino, null);
+//        triangles[2] = new Triangle2D(p[6], p[7], p[8], 250, Colors.spring, null);
+//        triangles[1] = new Triangle2D(p[3], p[4], p[5], 350, Colors.maraschino, null);
 //        triangles[0] = new Triangle2D(p[0], p[1], p[2], 300, Colors.tangerine, null);
 //        this.triangles = triangles;
 //

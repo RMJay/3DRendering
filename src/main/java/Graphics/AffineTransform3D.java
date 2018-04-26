@@ -1,4 +1,5 @@
 package Graphics;
+import Jama.Matrix;
 
 public class AffineTransform3D {
     final double[][] matrix;
@@ -22,11 +23,11 @@ public class AffineTransform3D {
     //==================================================================================================================
 
     public AffineTransform3D concatenateWith(AffineTransform3D other) {
-        return new AffineTransform3D(crossProduct(other.matrix, matrix));
+        return new AffineTransform3D(matrixMultiply(other.matrix, matrix));
     }
 
     public AffineTransform3D applying(double[][] transformMatrix) {
-        return new AffineTransform3D(crossProduct(transformMatrix, matrix));
+        return new AffineTransform3D(matrixMultiply(transformMatrix, matrix));
     }
 
     public AffineTransform3D scaledBy(double scale) {
@@ -79,12 +80,12 @@ public class AffineTransform3D {
         rY[1][1] = 1.0;
         rY[3][3] = 1.0;
 
-        return this.applying(crossProduct(rX, rY));
+        return this.applying(matrixMultiply(rX, rY));
     }
 
     ///=================================================================================================================
 
-    static double[][] crossProduct(double[][] a, double[][] b) {
+    static double[][] matrixMultiply(double[][] a, double[][] b) {
         double[][] transformed = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -105,6 +106,11 @@ public class AffineTransform3D {
             sb.append('\n');
         }
         return sb.toString();
+    }
+
+    public AffineTransform3D inverse() {
+        Matrix m = new Matrix(matrix);
+        return new AffineTransform3D(m.inverse().getArray());
     }
 
 }

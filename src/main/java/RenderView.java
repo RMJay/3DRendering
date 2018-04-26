@@ -112,7 +112,6 @@ public class RenderView extends JPanel {
                 .concatenateWith(zoom)
                 .concatenateWith(rotation);
 
-
         Triangle2D[] triangles = new Triangle2D[scene.numTriangles];
         int i = 0;
         Triangle2D triangle2D;
@@ -218,6 +217,17 @@ public class RenderView extends JPanel {
 
     void zoomBy(double factor) {
         zoom = zoom.scaledBy(factor);
+        refreshTriangles();
+        repaint();
+    }
+
+    public void moveLight(double dxScreen, double dyScreen) {
+        System.out.println("move light");
+        Vector3D displacementScreen = new Vector3D(dxScreen, dyScreen, 0.0);
+        AffineTransform3D transform = AffineTransform3D.identity()
+                .concatenateWith(rotation);
+        Vector3D displacementModel = displacementScreen.applying(transform.inverse());
+        scene.moveLightBy(displacementModel);
         refreshTriangles();
         repaint();
     }

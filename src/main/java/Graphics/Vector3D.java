@@ -2,9 +2,9 @@ package Graphics;
 
 public class Vector3D {
 
-    final double dx, dy, dz;
+    public final double dx, dy, dz;
 
-    Vector3D(double dx, double dy, double dz) {
+    public Vector3D(double dx, double dy, double dz) {
         this.dx = dx;
         this.dy = dy;
         this.dz = dz;
@@ -25,7 +25,7 @@ public class Vector3D {
         return new Vector3D(dx/norm, dy/norm, dz/norm);
     }
 
-    Vector3D applying(AffineTransform3D transform) {
+    public Vector3D applying(AffineTransform3D transform) {
         final double[][] a = transform.matrix;
         final double[] h = { dx, dy, dz, 1.0 }; //homogenous form
         double dxNew = h[0]*a[0][0] + h[1]*a[1][0] + h[2]*a[2][0] + h[3]*a[3][0];

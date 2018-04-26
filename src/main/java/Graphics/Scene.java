@@ -45,4 +45,11 @@ public class Scene {
         };
     }
 
+    public void moveLightBy(Vector3D displacement) {
+        double x = lightSource.x + displacement.dx;
+        double y = lightSource.y + displacement.dy;
+        double z = lightSource.z + displacement.dz;
+        lightSource = new Point3D(x, y, z);
+    }
+
 }

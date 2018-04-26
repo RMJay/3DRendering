@@ -24,6 +24,8 @@ public class Application {
 
         Controller controller = new Controller(renderView, face);
 
+//        f.addKeyListener(controller);
+
         Container pane = f.getContentPane();
         pane.add(controller, BorderLayout.CENTER);
 

@@ -219,7 +219,6 @@ public class Triangle2D {
                         double ambient = 0.15;
                         brightness = ambient + brightness * 0.85;
                         int grey = (int)(255 * brightness);
-//                        int rgb = Color.BLUE.getRGB();
                         int rgb = grey;
                         rgb = (rgb << 8) + grey;
                         rgb = (rgb << 8) + grey;
@@ -255,6 +254,9 @@ public class Triangle2D {
                 if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
                     if (z < context.zBuffer.getBufferedZ(x, y)) {
                         Point2D p = new Point2D(x, y);
+                        double brightness = phongBrightness(p);
+                        double ambient = 0.15;
+                        brightness = ambient + brightness * 0.85;
                         int rgb = interpolateColor(p);
                         int red = (int)(((rgb >> 16) & 0xFF) * brightness);
                         int green = (int)(((rgb >> 8) & 0xFF) * brightness);

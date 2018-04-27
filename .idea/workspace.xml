@@ -2,30 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac6afd0b-b29b-41a7-801c-579f9b1e316c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/fileContent/fileContent.lock" afterPath="$PROJECT_DIR$/.gradle/4.3.1/fileContent/fileContent.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/java/main/RenderView$Mode.class" afterPath="$PROJECT_DIR$/build/classes/java/main/RenderView$Mode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/java/main/RenderView.class" afterPath="$PROJECT_DIR$/build/classes/java/main/RenderView.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/ModelReader.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/ModelReader.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/Sphere$1.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/Sphere$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/Sphere.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/Sphere.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle2D$1.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle2D$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle2D$Mode.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle2D$Mode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle2D.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle2D.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle3D.class" afterPath="$PROJECT_DIR$/out/production/classes/Graphics/Triangle3D.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/RenderView$Mode.class" afterPath="$PROJECT_DIR$/out/production/classes/RenderView$Mode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/classes/RenderView.class" afterPath="$PROJECT_DIR$/out/production/classes/RenderView.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/ModelReader.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/ModelReader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Sphere.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Sphere.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Vector3D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Vector3D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/RenderView.java" afterPath="$PROJECT_DIR$/src/main/java/RenderView.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -67,68 +44,20 @@
       <file leaf-file-name="RenderView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/RenderView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
+            <state relative-caret-position="639">
               <caret line="165" column="56" lean-forward="false" selection-start-line="165" selection-start-column="56" selection-end-line="165" selection-end-column="56" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ModelReader.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/ModelReader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="104" column="13" lean-forward="false" selection-start-line="104" selection-start-column="13" selection-end-line="104" selection-end-column="13" />
-              <folding>
-                <element signature="e#432#462#0" expanded="true" />
-                <element signature="e#567#579#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Triangle3D.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="265">
-              <caret line="19" column="29" lean-forward="false" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#getCentroid#0;class#Triangle3D#0" expanded="false" />
-                <element signature="e#1835#1836#0" expanded="true" />
-                <element signature="e#1868#1869#0" expanded="true" />
-                <element signature="e#1899#1900#0" expanded="true" />
-                <element signature="e#1932#1933#0" expanded="true" />
-                <element signature="e#2102#2103#0" expanded="true" />
-                <element signature="e#2138#2139#0" expanded="true" />
-                <element signature="method#equals#0;class#Triangle3D#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Triangle2D.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Triangle2D.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-646">
-              <caret line="108" column="107" lean-forward="false" selection-start-line="108" selection-start-column="107" selection-end-line="108" selection-end-column="107" />
+            <state relative-caret-position="289">
+              <caret line="258" column="65" lean-forward="false" selection-start-line="258" selection-start-column="65" selection-end-line="258" selection-end-column="65" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#12564#12565#0" expanded="true" />
-                <element signature="e#12620#12621#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Vector3D.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Vector3D.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="42" column="48" lean-forward="false" selection-start-line="42" selection-start-column="48" selection-end-line="42" selection-end-column="48" />
-              <folding>
-                <element signature="e#1431#1432#0" expanded="true" />
-                <element signature="e#1486#1487#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -509,8 +438,8 @@
         <option value="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/Sphere.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/Vector3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/ModelReader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" />
       </list>
     </option>
   </component>
@@ -760,12 +689,12 @@
       <workItem from="1524680560063" duration="1270000" />
       <workItem from="1524682039650" duration="39000" />
       <workItem from="1524754209437" duration="22379000" />
-      <workItem from="1524779474601" duration="46418000" />
+      <workItem from="1524779474601" duration="46729000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="200981000" />
+    <option name="totallyTimeSpent" value="201292000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
@@ -1221,26 +1150,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/RenderView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="165" column="56" lean-forward="false" selection-start-line="165" selection-start-column="56" selection-end-line="165" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-646">
-          <caret line="108" column="107" lean-forward="false" selection-start-line="108" selection-start-column="107" selection-end-line="108" selection-end-column="107" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#12564#12565#0" expanded="true" />
-            <element signature="e#12620#12621#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/ModelReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
@@ -1248,6 +1157,24 @@
           <folding>
             <element signature="e#432#462#0" expanded="true" />
             <element signature="e#567#579#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/RenderView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="639">
+          <caret line="165" column="56" lean-forward="false" selection-start-line="165" selection-start-column="56" selection-end-line="165" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="258" column="65" lean-forward="false" selection-start-line="258" selection-start-column="65" selection-end-line="258" selection-end-column="65" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

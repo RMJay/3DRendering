@@ -7,7 +7,7 @@ import Graphics.*;
 
 public class RenderView extends JPanel {
 
-    enum Mode { POLYGONS, FLAT, Z_BUFFER }
+    enum Mode { POLYGONS, FLAT, Z_BUFFER, TEXTURE }
 
     private Mode mode = Mode.POLYGONS;
     private Scene scene = null;
@@ -118,9 +118,11 @@ public class RenderView extends JPanel {
         while (i < scene.numTriangles) {
             Triangle3D transformed = it.next().applying(transform);
             if (mode == Mode.FLAT) {
-                triangle2D = flatModeTriangle2D(transformed);
+                triangle2D = flatMode(transformed, scene.getLightSource());
+            } else if (mode == Mode.TEXTURE) {
+                triangle2D = textureMode(transformed, scene.getLightSource());
             } else {
-                triangle2D = polygonModeTriangle2D(transformed);
+                triangle2D = Triangle2D.PolygonMode(transformed);
             }
             triangles[i] = triangle2D;
             i++;
@@ -139,40 +141,21 @@ public class RenderView extends JPanel {
         modelBounds = bounds;
     }
 
-    Triangle2D polygonModeTriangle2D(Triangle3D t) {
-        Color fill;
-        Color stroke;
-        if (t.label == TriangleLabel.FACE) {
-            fill = Color.WHITE;
-            stroke = Color.RED;
+    Triangle2D flatMode(Triangle3D t, Point3D lightSource) {
+        if (t.label == TriangleLabel.LIGHT) {
+            return Triangle2D.PolygonMode(t);
         } else {
-            fill = Colors.lemon;
-            stroke = Colors.tangerine;
+            return Triangle2D.FlatMode(t, lightSource);
         }
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), fill, stroke);
     }
 
-    Triangle2D flatModeTriangle2D(Triangle3D t) {
-        Color fill;
-        Color stroke;
-        if (t.label == TriangleLabel.FACE) {
-            Point3D lightSource = scene.getLightSource();
-            Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
-            Vector3D normal = t.normal;
-            double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
-            int greyscale = (int)Math.round(dotProduct * 255);
-            if (greyscale < 0) {
-                greyscale = 0;
-            }
-            fill = new Color(greyscale, greyscale, greyscale);
-            stroke = null;
+    Triangle2D textureMode(Triangle3D t, Point3D lightSource) {
+        if (t.label == TriangleLabel.LIGHT) {
+            return Triangle2D.PolygonMode(t);
         } else {
-            fill = Colors.lemon;
-            stroke = Colors.tangerine;
+            return TexturedTriangle2D.MakeFrom(t, lightSource);
         }
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), fill, stroke);
     }
-
 
     void renderModel(MyContext context) {
         Rectangle dirtyRect = new Rectangle(0, 0, getWidth(), getHeight());

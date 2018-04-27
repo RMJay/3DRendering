@@ -8,13 +8,17 @@ public class Triangle3D {
     public final TriangleLabel label;
     public final Point3D v1, v2, v3;
     public final Vector3D normal;
+    public final Color c1, c2, c3;
 
-    public Triangle3D(Point3D v1, Point3D v2, Point3D v3, Vector3D normal, TriangleLabel label) {
+    public Triangle3D(Point3D v1, Point3D v2, Point3D v3, Vector3D normal, TriangleLabel label, Color c1, Color c2, Color c3) {
         this.v1 = v1;
         this.v2 = v2;
         this.v3 = v3;
         this.normal = normal;
         this.label = label;
+        this.c1 = c1;
+        this.c2 = c2;
+        this.c3 = c3;
     }
 
     public Point2D get2DPoint1() {
@@ -47,7 +51,7 @@ public class Triangle3D {
 
     public Triangle3D applying(AffineTransform3D transform) {
         if (transform != null) {
-            return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform), normal, label);
+            return new Triangle3D(v1.applying(transform), v2.applying(transform), v3.applying(transform), normal, label, c1, c2, c3);
         } else {
             return this;
         }

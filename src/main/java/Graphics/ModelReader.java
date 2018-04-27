@@ -1,10 +1,12 @@
 package Graphics;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ModelReader {
 
@@ -12,6 +14,8 @@ public class ModelReader {
     private FileReader frTexture;
     private StreamTokenizer inShape;
     private StreamTokenizer inTexture;
+
+//    private HashMap<Integer, Color> perVertexRGB = new HashMap<Integer, Color>();
 
     public Face read(String shapeDataFilename, String textureDataFilename) {
         try {
@@ -22,18 +26,28 @@ public class ModelReader {
             inTexture = new StreamTokenizer(frTexture);
 
             ArrayList<Triangle3D> triangleAccumulator = new ArrayList<Triangle3D>();
-            int lineNo = 0;
-            while (inShape.ttype != inShape.TT_EOF) {
+            while (inShape.ttype != StreamTokenizer.TT_EOF) {
+                for (int j = 0; j < 3; j++) {
+                    inShape.nextToken();
+                    inTexture.nextToken();
+                }
                 Point3D v1 = readPoint();
                 Point3D v2 = readPoint();
                 Point3D v3 = readPoint();
-                int g1 = readGreyscale();
-                int g2 = readGreyscale();
-                int g3 = readGreyscale();
+                Color c1 = new Color(100,100,100);
+                Color c2 = new Color(100,100,100);
+                Color c3 = new Color(100,100,100);
+                try {
+                    c1 = readColor();
+                    c2 = readColor();
+                    c3 = readColor();
+                } catch (IllegalArgumentException e) {
+                    //nothing
+                }
                 Vector3D v1toV3 = Vector3D.vectorFromTo(v1, v3);
                 Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
                 Vector3D normal = Vector3D.crossProductAndNormalise(v1toV3, v1toV2);
-                Triangle3D t = new Triangle3D(v1, v2, v3, normal, TriangleLabel.FACE);
+                Triangle3D t = new Triangle3D(v1, v2, v3, normal, TriangleLabel.FACE, c1, c2, c3);
                 triangleAccumulator.add(t);
             }
 
@@ -53,7 +67,6 @@ public class ModelReader {
 
     Point3D readPoint() throws IOException {
         inShape.nextToken();
-        int lineNo = inShape.lineno();
         double x = inShape.nval;
         inShape.nextToken();
         double y = inShape.nval;
@@ -62,9 +75,14 @@ public class ModelReader {
         return new Point3D(x, y, z);
     }
 
-    int readGreyscale() throws IOException {
+    Color readColor() throws IOException {
         inTexture.nextToken();
-        Double val = inTexture.nval;
-        return val.intValue();
+        int r = (int)inTexture.nval;
+        inTexture.nextToken();
+        int g = (int)inTexture.nval;
+        inTexture.nextToken();
+        int b = (int)inTexture.nval;
+        Color color = new Color(r, g, b);
+        return color;
     }
 }

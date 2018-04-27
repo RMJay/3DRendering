@@ -16,8 +16,8 @@ public class Application {
             }
         });
 
-        String shapeDataFilename = "face-shape.txt";
-        String textureDataFilename = "face-texture.txt";
+        String shapeDataFilename = "new_shape.txt";
+        String textureDataFilename = "new_tex.txt";
         ModelReader mr = new ModelReader();
         Face face = mr.read(shapeDataFilename, textureDataFilename);
         RenderView renderView = new RenderView();

@@ -6,17 +6,20 @@ import java.util.Comparator;
 
 public class Triangle2D {
 
+    enum Mode { POLYGON, FLAT, TEXTURE }
     enum PixelType { EDGE, INSIDE, OUTSIDE, BACK }
 
+    private final Mode mode;
     private final boolean isFrontSide;
     private final Point2D[] points;
     private final Line2DNormalForm[] lines;
     private final double z;
-    private final int strokeRGB;
-    private final int fillRGB;
+    private final Color c1, c2, c3;
     private final Rectangle bounds;
+    private final double brightness;
 
-    public Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Color fill, Color stroke) {
+    protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Color c1, Color c2, Color c3, double brightness, Mode mode) {
+        this.mode = mode;
         points = new Point2D[]{ p1, p2, p3 };
         Line2DNormalForm[] lines = new Line2DNormalForm[3];
         lines[0] = Line2DNormalForm.lineThrough(p1, p2);
@@ -25,16 +28,10 @@ public class Triangle2D {
         this.lines = lines;
         this.z = z;
         isFrontSide = isClockwise(points);
-        if (fill != null) {
-            fillRGB = fill.getRGB();
-        } else {
-            fillRGB = 1; //because RGB values are negative
-        }
-        if (stroke != null) {
-            strokeRGB = stroke.getRGB();
-        } else {
-            strokeRGB = 1; //because int RGB values are negative
-        }
+        this.c1 = c1;
+        this.c2 = c2;
+        this.c3 = c3;
+        this.brightness = brightness;
 
         double minX = Double.POSITIVE_INFINITY;
         double minY = Double.POSITIVE_INFINITY;
@@ -59,38 +56,102 @@ public class Triangle2D {
                 (int)Math.ceil(maxX - minX), (int)Math.ceil(maxY - minY));
     }
 
+    public static Triangle2D PolygonMode(Triangle3D t) {
+        Color c = Color.WHITE;  //not used
+        double brightness = 0.0; //not used
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.POLYGON);
+    }
+
+    public static Triangle2D FlatMode(Triangle3D t, Point3D lightSource) {
+        Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
+        Vector3D normal = t.normal;
+        double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
+        double brightness = dotProduct;
+        if (brightness < 0) {
+            brightness = 0;
+        }
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.c1, t.c2, t.c3, brightness, Mode.FLAT);
+    }
+
     public Rectangle getBounds() {
         return new Rectangle(bounds);
     }
 
     public void drawInto(MyContext context) {
+        if (isFrontSide) {
+            switch (mode) {
+                case POLYGON:
+                    polygonDrawInto(context);
+                    break;
+                case FLAT:
+                    flatDrawInto(context);
+                    break;
+                case TEXTURE:
+                    flatDrawInto(context);
+                    break;
+            }
+        }
+    }
+
+    private void polygonDrawInto(MyContext context) {
         Rectangle intersect = context.bounds.intersection(bounds);
         int maxX = context.getWidth();
         int maxY = context.getHeight();
 
-        if (fillRGB < 0 || strokeRGB < 0) {
-            if (isFrontSide) {
-                for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
-                    for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
-                        PixelType pix = pixelType(x, y);
-                        if (strokeRGB < 0) {
-                            if (pix == PixelType.EDGE) {
-                                if (z < context.zBuffer.getBufferedZ(x, y)) {
-                                    context.pixels.setRGB(x, y, strokeRGB);
-                                    context.zBuffer.setZ(x, y, z);
-                                }
-                            } else if (pix == PixelType.INSIDE) {
-                                if (z < context.zBuffer.getBufferedZ(x, y)) {
-                                    context.pixels.setRGB(x, y, fillRGB);
-                                    context.zBuffer.setZ(x, y, z);
-                                }
-                            }
-                        } else if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
-                            if (z < context.zBuffer.getBufferedZ(x, y)) {
-                                context.pixels.setRGB(x, y, fillRGB);
-                                context.zBuffer.setZ(x, y, z);
-                            }
-                        }
+        int fillRGB = Color.WHITE.getRGB();
+        int strokeRGB = Color.RED.getRGB();
+
+        for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
+            for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
+                PixelType pix = pixelType(x, y);
+                if (pix == PixelType.EDGE) {
+                    if (z < context.zBuffer.getBufferedZ(x, y)) {
+                        context.pixels.setRGB(x, y, strokeRGB);
+                        context.zBuffer.setZ(x, y, z);
+                    }
+                } else if (pix == PixelType.INSIDE) {
+                    if (z < context.zBuffer.getBufferedZ(x, y)) {
+                        context.pixels.setRGB(x, y, fillRGB);
+                        context.zBuffer.setZ(x, y, z);
+                    }
+                }
+            }
+        }
+    }
+
+    private void flatDrawInto(MyContext context) {
+        Rectangle intersect = context.bounds.intersection(bounds);
+        int maxX = context.getWidth();
+        int maxY = context.getHeight();
+        int grey = (int)(brightness * 255);
+        grey = (grey << 8) + grey;
+        grey = (grey << 8) + grey;
+
+        for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
+            for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
+                PixelType pix = pixelType(x, y);
+                if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
+                    if (z < context.zBuffer.getBufferedZ(x, y)) {
+                        context.pixels.setRGB(x, y, grey);
+                        context.zBuffer.setZ(x, y, z);
+                    }
+                }
+            }
+        }
+    }
+
+    private void textureDrawInto(MyContext context) {
+        Rectangle intersect = context.bounds.intersection(bounds);
+        int maxX = context.getWidth();
+        int maxY = context.getHeight();
+
+        for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
+            for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
+                PixelType pix = pixelType(x, y);
+                if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
+                    if (z < context.zBuffer.getBufferedZ(x, y)) {
+                        context.pixels.setRGB(x, y, fillRGB);
+                        context.zBuffer.setZ(x, y, z);
                     }
                 }
             }
@@ -102,7 +163,6 @@ public class Triangle2D {
         double dot1 = dotProduct(homogenousPoint, lines[0].homos);
         double dot2 = dotProduct(homogenousPoint, lines[1].homos);
         double dot3 = dotProduct(homogenousPoint, lines[2].homos);
-//        if (isFrontSide) {
             if (dot1 < 0.5 && dot2 < 0.5 && dot3 < 0.5) {
                 if (dot1 > -0.5 || dot2 > -0.5 || dot3 > -0.5) {
                     return PixelType.EDGE;
@@ -110,15 +170,6 @@ public class Triangle2D {
                 return PixelType.INSIDE;
             }
             return PixelType.OUTSIDE;
-//        } else {
-//            if (dot1 > -0.5 && dot2 > -0.5 && dot3 > -0.5) {
-//                if (dot1 < 0.5 || dot2 < 0.5 || dot3 < 0.5) {
-//                    return PixelType.EDGE;
-//                }
-//                return PixelType.INSIDE;
-//            }
-//            return PixelType.OUTSIDE;
-//        }
     }
 
     private static double dotProduct(double[] a, double[] b) {

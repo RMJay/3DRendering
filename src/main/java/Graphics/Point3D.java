@@ -1,13 +1,14 @@
 package Graphics;
 
 public class Point3D {
-//    public final int id; //equal to line number in data file
     public final double x, y, z;
+    private int id;
 
-    public Point3D(double x, double y, double z) {
+    public Point3D(double x, double y, double z, int id) {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.id = id;
     }
 
     public int intX() {
@@ -16,6 +17,14 @@ public class Point3D {
 
     public int intY() {
         return (int)Math.round(y);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -29,6 +38,6 @@ public class Point3D {
         double xNew = h[0]*a[0][0] + h[1]*a[1][0] + h[2]*a[2][0] + h[3]*a[3][0];
         double yNew = h[0]*a[0][1] + h[1]*a[1][1] + h[2]*a[2][1] + h[3]*a[3][1];
         double zNew = h[0]*a[0][2] + h[1]*a[1][2] + h[2]*a[2][2] + h[3]*a[3][2];
-        return new Point3D(xNew, yNew, zNew);
+        return new Point3D(xNew, yNew, zNew, id);
     }
 }

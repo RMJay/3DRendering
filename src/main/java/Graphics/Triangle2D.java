@@ -21,7 +21,7 @@ public class Triangle2D {
     private final Vector2D v0, v1; //used in the barycentric interpolation algorithm
     private final double d00, d01, d11, invDenom;
 
-    protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Vector3D n1, Vector3D n2, Vector3D n3,
+    protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Vector3D averageNormal, Vector3D n1, Vector3D n2, Vector3D n3,
                           Color c1, Color c2, Color c3, double brightness, Mode mode) {
         this.mode = mode;
         points = new Point2D[]{ p1, p2, p3 };
@@ -74,28 +74,28 @@ public class Triangle2D {
     public static Triangle2D PolygonMode(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
-                c, c, c, brightness, Mode.POLYGON);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, brightness, Mode.POLYGON);
     }
 
     public static Triangle2D LightSource(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
-                c, c, c, brightness, Mode.LIGHTSOURCE);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, brightness, Mode.LIGHTSOURCE);
     }
 
     public static Triangle2D FlatMode(Triangle3D t, Point3D lightSource) {
         Color c = Color.WHITE;  //not used
         double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
-                c, c, c, brightness, Mode.FLAT);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, brightness, Mode.FLAT);
     }
 
     public static Triangle2D TextureMode(Triangle3D t, Point3D lightSource) {
         double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
-                t.getC1(), t.getC2(), t.getC3(), brightness, Mode.TEXTURE);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
+                t.getN1(), t.getN2(), t.getN3(), t.getC1(), t.getC2(), t.getC3(), brightness, Mode.TEXTURE);
     }
 
     static double getBrightness(Triangle3D t, Point3D lightSource) {
@@ -130,6 +130,20 @@ public class Triangle2D {
                     break;
             }
         }
+    }
+
+    PixelType pixelType(int x, int y) {
+        double[] homogenousPoint = new double[] { x, y, 1.0 };
+        double dot1 = dotProduct(homogenousPoint, lines[0].homos);
+        double dot2 = dotProduct(homogenousPoint, lines[1].homos);
+        double dot3 = dotProduct(homogenousPoint, lines[2].homos);
+        if (dot1 < 0.5 && dot2 < 0.5 && dot3 < 0.5) {
+            if (dot1 > -0.5 || dot2 > -0.5 || dot3 > -0.5) {
+                return PixelType.EDGE;
+            }
+            return PixelType.INSIDE;
+        }
+        return PixelType.OUTSIDE;
     }
 
     private void polygonDrawInto(MyContext context, Color fill, Color stroke) {
@@ -226,20 +240,6 @@ public class Triangle2D {
         bary[2] = (d00 * d21 - d01 * d20) * invDenom;
         bary[0] = 1.0d - bary[1] - bary[2];
         return bary;
-    }
-
-    PixelType pixelType(int x, int y) {
-        double[] homogenousPoint = new double[] { x, y, 1.0 };
-        double dot1 = dotProduct(homogenousPoint, lines[0].homos);
-        double dot2 = dotProduct(homogenousPoint, lines[1].homos);
-        double dot3 = dotProduct(homogenousPoint, lines[2].homos);
-            if (dot1 < 0.5 && dot2 < 0.5 && dot3 < 0.5) {
-                if (dot1 > -0.5 || dot2 > -0.5 || dot3 > -0.5) {
-                    return PixelType.EDGE;
-                }
-                return PixelType.INSIDE;
-            }
-            return PixelType.OUTSIDE;
     }
 
     private static double dotProduct(double[] a, double[] b) {

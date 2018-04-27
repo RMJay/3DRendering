@@ -2,22 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac6afd0b-b29b-41a7-801c-579f9b1e316c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Vector2D.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/classes/java/main/Graphics/TexturedTriangle2D.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/Graphics/TexturedTriangle2D.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/fileContent/fileContent.lock" afterPath="$PROJECT_DIR$/.gradle/4.3.1/fileContent/fileContent.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.3.1/fileHashes/fileHashes.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.3.1/taskHistory/taskHistory.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/java/main/Graphics/ModelReader.class" afterPath="$PROJECT_DIR$/build/classes/java/main/Graphics/ModelReader.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/java/main/Graphics/Triangle2D$PixelType.class" afterPath="$PROJECT_DIR$/build/classes/java/main/Graphics/Triangle2D$PixelType.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/java/main/Graphics/Triangle2D.class" afterPath="$PROJECT_DIR$/build/classes/java/main/Graphics/Triangle2D.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/java/main/RenderView.class" afterPath="$PROJECT_DIR$/build/classes/java/main/RenderView.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/RenderView.java" afterPath="$PROJECT_DIR$/src/main/java/RenderView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -66,11 +52,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Triangle2D.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Triangle3D.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#722#723#0" expanded="true" />
+                <element signature="e#768#769#0" expanded="true" />
+                <element signature="e#804#805#0" expanded="true" />
+                <element signature="e#850#851#0" expanded="true" />
+                <element signature="e#886#887#0" expanded="true" />
+                <element signature="e#932#933#0" expanded="true" />
+                <element signature="e#968#969#0" expanded="true" />
+                <element signature="e#1017#1018#0" expanded="true" />
+                <element signature="method#getCentroid#0;class#Triangle3D#0" expanded="false" />
+                <element signature="method#toString#0;class#Triangle3D#0" expanded="false" />
+                <element signature="method#applying#0;class#Triangle3D#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Triangle2D.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1347">
-              <caret line="188" column="0" lean-forward="false" selection-start-line="188" selection-start-column="0" selection-end-line="188" selection-end-column="0" />
+            <state relative-caret-position="-221">
+              <caret line="41" column="31" lean-forward="false" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -446,7 +455,6 @@
         <option value="$PROJECT_DIR$/src/main/java/Controller.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/ModelReader2.java" />
         <option value="$PROJECT_DIR$/src/main/java/Test.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/Sphere.java" />
         <option value="$PROJECT_DIR$/src/main/java/TestReader.java" />
         <option value="$PROJECT_DIR$/src/main/java/Application.java" />
@@ -455,6 +463,7 @@
         <option value="$PROJECT_DIR$/src/main/java/RenderView.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/Vector2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java" />
       </list>
     </option>
   </component>
@@ -704,12 +713,12 @@
       <workItem from="1524680560063" duration="1270000" />
       <workItem from="1524682039650" duration="39000" />
       <workItem from="1524754209437" duration="22379000" />
-      <workItem from="1524779474601" duration="28253000" />
+      <workItem from="1524779474601" duration="29021000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="182816000" />
+    <option name="totallyTimeSpent" value="183584000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
@@ -1146,20 +1155,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="37" lean-forward="false" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#Triangle3D#0;class#Triangle3D#0" expanded="false" />
-            <element signature="method#getCentroid#0;class#Triangle3D#0" expanded="false" />
-            <element signature="method#toString#0;class#Triangle3D#0" expanded="false" />
-            <element signature="method#applying#0;class#Triangle3D#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/RenderView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -1170,10 +1165,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1347">
-          <caret line="188" column="0" lean-forward="false" selection-start-line="188" selection-start-column="0" selection-end-line="188" selection-end-column="0" />
+        <state relative-caret-position="-221">
+          <caret line="41" column="31" lean-forward="false" selection-start-line="41" selection-start-column="31" selection-end-line="41" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Graphics/Triangle3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="19" lean-forward="false" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#722#723#0" expanded="true" />
+            <element signature="e#768#769#0" expanded="true" />
+            <element signature="e#804#805#0" expanded="true" />
+            <element signature="e#850#851#0" expanded="true" />
+            <element signature="e#886#887#0" expanded="true" />
+            <element signature="e#932#933#0" expanded="true" />
+            <element signature="e#968#969#0" expanded="true" />
+            <element signature="e#1017#1018#0" expanded="true" />
+            <element signature="method#getCentroid#0;class#Triangle3D#0" expanded="false" />
+            <element signature="method#toString#0;class#Triangle3D#0" expanded="false" />
+            <element signature="method#applying#0;class#Triangle3D#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -6,15 +6,20 @@ import java.util.Comparator;
 public class Triangle3D {
 
     public final TriangleLabel label;
-    public final Point3D v1, v2, v3;
-    public final Vector3D normal;
-    public final Color c1, c2, c3;
+    public final Point3D[] points;
+    public final Vector3D[] normals;
+    public final Color[] colors;
 
-    public Triangle3D(Point3D v1, Point3D v2, Point3D v3, Vector3D normal, TriangleLabel label, Color c1, Color c2, Color c3) {
-        this.v1 = v1;
-        this.v2 = v2;
-        this.v3 = v3;
-        this.normal = normal;
+    public Triangle3D(Point3D v1, Point3D v2, Point3D v3, Vector3D n1, Vector3D n2, Vector3D n3, TriangleLabel label, Color c1, Color c2, Color c3) {
+        Point3D[] points = new Point3D[3];
+        points[0] = v1;
+        points[1] = v2;
+        points[2] = v3;
+        this.points = points;
+
+        Vector3D[] 
+
+        this.normals = normals;
         this.label = label;
         this.c1 = c1;
         this.c2 = c2;

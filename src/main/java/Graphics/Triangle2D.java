@@ -13,6 +13,7 @@ public class Triangle2D {
     private final boolean isFrontSide;
     private final Point2D[] points;
     private final Line2DNormalForm[] lines;
+    private final Vector3D[] normals;
     private final double z;
     private final Color[] colors;
     private final Rectangle bounds;
@@ -20,7 +21,8 @@ public class Triangle2D {
     private final Vector2D v0, v1; //used in the barycentric interpolation algorithm
     private final double d00, d01, d11, invDenom;
 
-    protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Color c1, Color c2, Color c3, double brightness, Mode mode) {
+    protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Vector3D n1, Vector3D n2, Vector3D n3,
+                          Color c1, Color c2, Color c3, double brightness, Mode mode) {
         this.mode = mode;
         points = new Point2D[]{ p1, p2, p3 };
         Line2DNormalForm[] lines = new Line2DNormalForm[3];
@@ -32,6 +34,12 @@ public class Triangle2D {
         isFrontSide = isClockwise(points);
         colors = new Color[] { c1, c2, c3};
         this.brightness = brightness;
+
+        Vector3D[] normals = new Vector3D[3];
+        normals[0] = n1;
+        normals[1] = n2;
+        normals[2] = n3;
+        this.normals = normals;
 
         v0 = Vector2D.Subtract(points[1], points[0]);
         v1 = Vector2D.Subtract(points[2], points[0]);
@@ -66,24 +74,28 @@ public class Triangle2D {
     public static Triangle2D PolygonMode(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.POLYGON);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+                c, c, c, brightness, Mode.POLYGON);
     }
 
     public static Triangle2D LightSource(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.LIGHTSOURCE);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+                c, c, c, brightness, Mode.LIGHTSOURCE);
     }
 
     public static Triangle2D FlatMode(Triangle3D t, Point3D lightSource) {
         Color c = Color.WHITE;  //not used
         double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.FLAT);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+                c, c, c, brightness, Mode.FLAT);
     }
 
     public static Triangle2D TextureMode(Triangle3D t, Point3D lightSource) {
         double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.c1, t.c2, t.c3, brightness, Mode.TEXTURE);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+                t.c1, t.c2, t.c3, brightness, Mode.TEXTURE);
     }
 
     static double getBrightness(Triangle3D t, Point3D lightSource) {

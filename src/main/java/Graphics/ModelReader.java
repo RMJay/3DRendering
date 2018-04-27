@@ -47,7 +47,10 @@ public class ModelReader {
                 Vector3D v1toV3 = Vector3D.vectorFromTo(v1, v3);
                 Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
                 Vector3D normal = Vector3D.crossProductAndNormalise(v1toV3, v1toV2);
-                Triangle3D t = new Triangle3D(v1, v2, v3, normal, TriangleLabel.FACE, c1, c2, c3);
+                Vector3D n1 = normal;
+                Vector3D n2 = normal;
+                Vector3D n3 = normal;
+                Triangle3D t = new Triangle3D(v1, v2, v3, n1, n2, n3, TriangleLabel.FACE, c1, c2, c3);
                 triangleAccumulator.add(t);
             }
 

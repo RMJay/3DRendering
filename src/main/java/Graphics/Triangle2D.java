@@ -74,34 +74,34 @@ public class Triangle2D {
     public static Triangle2D PolygonMode(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
                 c, c, c, brightness, Mode.POLYGON);
     }
 
     public static Triangle2D LightSource(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
                 c, c, c, brightness, Mode.LIGHTSOURCE);
     }
 
     public static Triangle2D FlatMode(Triangle3D t, Point3D lightSource) {
         Color c = Color.WHITE;  //not used
         double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
                 c, c, c, brightness, Mode.FLAT);
     }
 
     public static Triangle2D TextureMode(Triangle3D t, Point3D lightSource) {
         double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.n1, t.n2, t.n3,
-                t.c1, t.c2, t.c3, brightness, Mode.TEXTURE);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getN1(), t.getN2(), t.getN3(),
+                t.getC1(), t.getC2(), t.getC3(), brightness, Mode.TEXTURE);
     }
 
     static double getBrightness(Triangle3D t, Point3D lightSource) {
         Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
-        Vector3D normal = t.normal;
-        double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
+        Vector3D normal = t.getAverageNormal();
+        double dotProduct = Vector3D.dotProduct(directionToLightSource, normal);
         double brightness = dotProduct;
         if (brightness < 0) {
             brightness = 0;

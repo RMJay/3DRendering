@@ -39,6 +39,10 @@ public class Vector3D {
         return new Vector3D(dx/norm, dy/norm, dz/norm);
     }
 
+    public double length() {
+        return Math.sqrt(dx*dx + dy*dy + dz*dz);
+    }
+
     public static double dotProduct(Vector3D v1, Vector3D v2) {
         return v1.dx * v2.dx + v1.dy*v2.dy + v1.dz*v2.dz;
     }

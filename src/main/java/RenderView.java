@@ -7,7 +7,7 @@ import Graphics.*;
 
 public class RenderView extends JPanel {
 
-    enum Mode { POLYGONS, FLAT, Z_BUFFER, TEXTURE }
+    enum Mode { POLYGONS, FLAT, PHONG, Z_BUFFER, TEXTURE }
 
     private Mode mode = Mode.POLYGONS;
     private Scene scene = null;
@@ -121,6 +121,8 @@ public class RenderView extends JPanel {
                 triangle2D = flatMode(transformed, scene.getLightSource());
             } else if (mode == Mode.TEXTURE) {
                 triangle2D = textureMode(transformed, scene.getLightSource());
+            } else if (mode == Mode.PHONG) {
+                triangle2D = phongMode(transformed, scene.getLightSource());
             } else {
                 triangle2D = polygonMode(transformed);
             }
@@ -154,6 +156,14 @@ public class RenderView extends JPanel {
             return Triangle2D.LightSource(t);
         } else {
             return Triangle2D.FlatMode(t, lightSource);
+        }
+    }
+
+    Triangle2D phongMode(Triangle3D t, Point3D lightSource) {
+        if (t.label == TriangleLabel.LIGHT) {
+            return Triangle2D.LightSource(t);
+        } else {
+            return Triangle2D.PhongMode(t, lightSource);
         }
     }
 

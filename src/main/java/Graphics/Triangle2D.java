@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class Triangle2D {
 
-    enum Mode { POLYGON, LIGHTSOURCE, FLAT, TEXTURE }
+    enum Mode { POLYGON, LIGHTSOURCE, FLAT, PHONG, TEXTURE }
     enum PixelType { EDGE, INSIDE, OUTSIDE, BACK }
 
     private final Mode mode;
@@ -18,11 +18,12 @@ public class Triangle2D {
     private final Color[] colors;
     private final Rectangle bounds;
     private final double brightness;
+    private final Vector3D directionToLightSource;
     private final Vector2D v0, v1; //used in the barycentric interpolation algorithm
     private final double d00, d01, d11, invDenom;
 
     protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Vector3D averageNormal, Vector3D n1, Vector3D n2, Vector3D n3,
-                          Color c1, Color c2, Color c3, double brightness, Mode mode) {
+                          Color c1, Color c2, Color c3, Vector3D directionToLightSource, Mode mode) {
         this.mode = mode;
         points = new Point2D[]{ p1, p2, p3 };
         Line2DNormalForm[] lines = new Line2DNormalForm[3];
@@ -33,6 +34,15 @@ public class Triangle2D {
         this.z = z;
         isFrontSide = isClockwise(points);
         colors = new Color[] { c1, c2, c3};
+        this.directionToLightSource = directionToLightSource;
+        double brightness = 1.0;
+        if (directionToLightSource != null) {
+            double dotProduct = Vector3D.dotProduct(directionToLightSource, averageNormal);
+            brightness = dotProduct;
+            if (brightness < 0) {
+                brightness = 0;
+            }
+        }
         this.brightness = brightness;
 
         Vector3D[] normals = new Vector3D[3];
@@ -74,39 +84,37 @@ public class Triangle2D {
     public static Triangle2D PolygonMode(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
+        Vector3D directionToLightSource = null;
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
-                t.getN1(), t.getN2(), t.getN3(), c, c, c, brightness, Mode.POLYGON);
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, directionToLightSource, Mode.POLYGON);
     }
 
     public static Triangle2D LightSource(Triangle3D t) {
         Color c = Color.WHITE;  //not used
         double brightness = 0.0; //not used
+        Vector3D directionToLightSource = null;
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
-                t.getN1(), t.getN2(), t.getN3(), c, c, c, brightness, Mode.LIGHTSOURCE);
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, directionToLightSource, Mode.LIGHTSOURCE);
     }
 
     public static Triangle2D FlatMode(Triangle3D t, Point3D lightSource) {
         Color c = Color.WHITE;  //not used
-        double brightness = getBrightness(t, lightSource);
+        Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
-                t.getN1(), t.getN2(), t.getN3(), c, c, c, brightness, Mode.FLAT);
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, directionToLightSource, Mode.FLAT);
+    }
+
+    public static Triangle2D PhongMode(Triangle3D t, Point3D lightSource) {
+        Color c = Color.WHITE;  //not used
+        Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
+                t.getN1(), t.getN2(), t.getN3(), c, c, c, directionToLightSource, Mode.PHONG);
     }
 
     public static Triangle2D TextureMode(Triangle3D t, Point3D lightSource) {
-        double brightness = getBrightness(t, lightSource);
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
-                t.getN1(), t.getN2(), t.getN3(), t.getC1(), t.getC2(), t.getC3(), brightness, Mode.TEXTURE);
-    }
-
-    static double getBrightness(Triangle3D t, Point3D lightSource) {
         Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
-        Vector3D normal = t.getAverageNormal();
-        double dotProduct = Vector3D.dotProduct(directionToLightSource, normal);
-        double brightness = dotProduct;
-        if (brightness < 0) {
-            brightness = 0;
-        }
-        return brightness;
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
+                t.getN1(), t.getN2(), t.getN3(), t.getC1(), t.getC2(), t.getC3(), directionToLightSource, Mode.TEXTURE);
     }
 
     public Rectangle getBounds() {
@@ -128,6 +136,8 @@ public class Triangle2D {
                 case TEXTURE:
                     textureDrawInto(context);
                     break;
+                case PHONG:
+                    phongDrawInto(context);
             }
         }
     }
@@ -192,6 +202,46 @@ public class Triangle2D {
                 }
             }
         }
+    }
+
+    private void phongDrawInto(MyContext context) {
+        Rectangle intersect = context.bounds.intersection(bounds);
+        int maxX = context.getWidth();
+        int maxY = context.getHeight();
+
+        for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
+            for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
+                PixelType pix = pixelType(x, y);
+                if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
+                    if (z < context.zBuffer.getBufferedZ(x, y)) {
+                        Point2D p = new Point2D(x, y);
+                        double brightness = phongBrightness(p);
+                        double ambient = 0.15;
+                        brightness = ambient + brightness * 0.85;
+                        int grey = (int)(255 * brightness);
+//                        int rgb = Color.BLUE.getRGB();
+                        int rgb = grey;
+                        rgb = (rgb << 8) + grey;
+                        rgb = (rgb << 8) + grey;
+                        context.pixels.setRGB(x, y, rgb);
+                        context.zBuffer.setZ(x, y, z);
+                    }
+                }
+            }
+        }
+    }
+
+    double phongBrightness(Point2D p) {
+        double[] bary = barycentricCoords(p);
+        double dx = bary[0] * normals[0].dx + bary[1] * normals[1].dx + bary[2] * normals[2].dx;
+        double dy = bary[0] * normals[0].dy + bary[1] * normals[1].dy + bary[2] * normals[2].dy;
+        double dz = bary[0] * normals[0].dz + bary[1] * normals[1].dz + bary[2] * normals[2].dz;
+        Vector3D normal = new Vector3D(dx, dy, dz).normalized();
+        double brightness = Vector3D.dotProduct(directionToLightSource, normal);
+        if (brightness < 0) {
+            brightness = 0;
+        }
+        return brightness;
     }
 
     private void textureDrawInto(MyContext context) {

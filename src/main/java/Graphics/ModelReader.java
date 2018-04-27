@@ -5,10 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 public class ModelReader {
 
@@ -54,8 +51,9 @@ public class ModelReader {
                 }
                 Vector3D v1toV3 = Vector3D.vectorFromTo(v1, v3);
                 Vector3D v1toV2 = Vector3D.vectorFromTo(v1, v2);
-                Vector3D normal = Vector3D.crossProductAndNormalise(v1toV3, v1toV2);
-                Triangle3D t = new Triangle3D(v1, v2, v3, normal, TriangleLabel.FACE, c1, c2, c3);
+                Vector3D averageNormal = Vector3D.crossProductAndNormalise(v1toV3, v1toV2);
+                Vector3D[] normals = {averageNormal, averageNormal, averageNormal };
+                Triangle3D t = new Triangle3D(v1, v2, v3, averageNormal, normals, TriangleLabel.FACE, c1, c2, c3);
                 triangleAccumulator.add(t);
 
                 HashSet<Triangle3D> set1 = adjacencyList.get(v1.getId());
@@ -99,12 +97,11 @@ public class ModelReader {
                         Vector3D avNorm = a.getAverageNormal();
                         dx += avNorm.dx;
                         dy += avNorm.dy;
-                        dz += avNorm.dy;
+                        dz += avNorm.dz;
                     }
                     norm = new Vector3D(dx, dy, dz).normalized();
                     t.setNorm(i, norm);
                 }
-
             }
 
             return new Face(triangles);

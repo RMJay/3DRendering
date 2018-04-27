@@ -122,7 +122,7 @@ public class RenderView extends JPanel {
             } else if (mode == Mode.TEXTURE) {
                 triangle2D = textureMode(transformed, scene.getLightSource());
             } else {
-                triangle2D = Triangle2D.PolygonMode(transformed);
+                triangle2D = polygonMode(transformed);
             }
             triangles[i] = triangle2D;
             i++;
@@ -141,9 +141,17 @@ public class RenderView extends JPanel {
         modelBounds = bounds;
     }
 
+    Triangle2D polygonMode(Triangle3D t) {
+        if (t.label == TriangleLabel.LIGHT) {
+            return Triangle2D.LightSource(t);
+        } else {
+            return Triangle2D.PolygonMode(t);
+        }
+    }
+
     Triangle2D flatMode(Triangle3D t, Point3D lightSource) {
         if (t.label == TriangleLabel.LIGHT) {
-            return Triangle2D.PolygonMode(t);
+            return Triangle2D.LightSource(t);
         } else {
             return Triangle2D.FlatMode(t, lightSource);
         }
@@ -151,9 +159,9 @@ public class RenderView extends JPanel {
 
     Triangle2D textureMode(Triangle3D t, Point3D lightSource) {
         if (t.label == TriangleLabel.LIGHT) {
-            return Triangle2D.PolygonMode(t);
+            return Triangle2D.LightSource(t);
         } else {
-            return TexturedTriangle2D.MakeFrom(t, lightSource);
+            return Triangle2D.TextureMode(t, lightSource);
         }
     }
 

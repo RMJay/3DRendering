@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 public class Triangle2D {
 
-    enum Mode { POLYGON, FLAT, TEXTURE }
+    enum Mode { POLYGON, LIGHTSOURCE, FLAT, TEXTURE }
     enum PixelType { EDGE, INSIDE, OUTSIDE, BACK }
 
     private final Mode mode;
@@ -14,9 +14,11 @@ public class Triangle2D {
     private final Point2D[] points;
     private final Line2DNormalForm[] lines;
     private final double z;
-    private final Color c1, c2, c3;
+    private final Color[] colors;
     private final Rectangle bounds;
     private final double brightness;
+    private final Vector2D v0, v1; //used in the barycentric interpolation algorithm
+    private final double d00, d01, d11, invDenom;
 
     protected Triangle2D(Point2D p1, Point2D p2, Point2D p3, double z, Color c1, Color c2, Color c3, double brightness, Mode mode) {
         this.mode = mode;
@@ -28,10 +30,15 @@ public class Triangle2D {
         this.lines = lines;
         this.z = z;
         isFrontSide = isClockwise(points);
-        this.c1 = c1;
-        this.c2 = c2;
-        this.c3 = c3;
+        colors = new Color[] { c1, c2, c3};
         this.brightness = brightness;
+
+        v0 = Vector2D.Subtract(points[1], points[0]);
+        v1 = Vector2D.Subtract(points[2], points[0]);
+        d00 = Vector2D.Dot(v0, v0);
+        d01 = Vector2D.Dot(v0, v1);
+        d11 = Vector2D.Dot(v1, v1);
+        invDenom = 1.0 / (d00 * d11 - d01 * d01);
 
         double minX = Double.POSITIVE_INFINITY;
         double minY = Double.POSITIVE_INFINITY;
@@ -62,7 +69,24 @@ public class Triangle2D {
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.POLYGON);
     }
 
+    public static Triangle2D LightSource(Triangle3D t) {
+        Color c = Color.WHITE;  //not used
+        double brightness = 0.0; //not used
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.LIGHTSOURCE);
+    }
+
     public static Triangle2D FlatMode(Triangle3D t, Point3D lightSource) {
+        Color c = Color.WHITE;  //not used
+        double brightness = getBrightness(t, lightSource);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), c, c, c, brightness, Mode.FLAT);
+    }
+
+    public static Triangle2D TextureMode(Triangle3D t, Point3D lightSource) {
+        double brightness = getBrightness(t, lightSource);
+        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.c1, t.c2, t.c3, brightness, Mode.TEXTURE);
+    }
+
+    static double getBrightness(Triangle3D t, Point3D lightSource) {
         Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
         Vector3D normal = t.normal;
         double dotProduct = Vector3D.dotProduct(directionToLightSource, t.normal);
@@ -70,7 +94,7 @@ public class Triangle2D {
         if (brightness < 0) {
             brightness = 0;
         }
-        return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.c1, t.c2, t.c3, brightness, Mode.FLAT);
+        return brightness;
     }
 
     public Rectangle getBounds() {
@@ -81,25 +105,28 @@ public class Triangle2D {
         if (isFrontSide) {
             switch (mode) {
                 case POLYGON:
-                    polygonDrawInto(context);
+                    polygonDrawInto(context, Color.WHITE, Color.RED);
+                    break;
+                case LIGHTSOURCE:
+                    polygonDrawInto(context, Colors.lemon, Colors.tangerine);
                     break;
                 case FLAT:
                     flatDrawInto(context);
                     break;
                 case TEXTURE:
-                    flatDrawInto(context);
+                    textureDrawInto(context);
                     break;
             }
         }
     }
 
-    private void polygonDrawInto(MyContext context) {
+    private void polygonDrawInto(MyContext context, Color fill, Color stroke) {
         Rectangle intersect = context.bounds.intersection(bounds);
         int maxX = context.getWidth();
         int maxY = context.getHeight();
 
-        int fillRGB = Color.WHITE.getRGB();
-        int strokeRGB = Color.RED.getRGB();
+        int fillRGB = fill.getRGB();
+        int strokeRGB = stroke.getRGB();
 
         for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
             for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
@@ -124,15 +151,16 @@ public class Triangle2D {
         int maxX = context.getWidth();
         int maxY = context.getHeight();
         int grey = (int)(brightness * 255);
-        grey = (grey << 8) + grey;
-        grey = (grey << 8) + grey;
+        int intRGB = grey;
+        intRGB = (intRGB << 8) + grey;
+        intRGB = (intRGB << 8) + grey;
 
         for (int x = intersect.x; x <= (intersect.x + intersect.width) && x < maxX; x++) {
             for (int y = intersect.y; y <= (intersect.y + intersect.height) && y < maxY; y++) {
                 PixelType pix = pixelType(x, y);
                 if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
                     if (z < context.zBuffer.getBufferedZ(x, y)) {
-                        context.pixels.setRGB(x, y, grey);
+                        context.pixels.setRGB(x, y, intRGB);
                         context.zBuffer.setZ(x, y, z);
                     }
                 }
@@ -150,12 +178,42 @@ public class Triangle2D {
                 PixelType pix = pixelType(x, y);
                 if (pix == PixelType.INSIDE || pix == PixelType.EDGE) {
                     if (z < context.zBuffer.getBufferedZ(x, y)) {
-                        context.pixels.setRGB(x, y, fillRGB);
+                        Point2D p = new Point2D(x, y);
+                        int rgb = interpolateColor(p);
+                        int red = (int)(((rgb >> 16) & 0xFF) * brightness);
+                        int green = (int)(((rgb >> 8) & 0xFF) * brightness);
+                        int blue = (int)((rgb & 0xFF) * brightness);
+                        rgb = red;
+                        rgb = (rgb << 8) + green;
+                        rgb = (rgb << 8) + blue;
+                        context.pixels.setRGB(x, y, rgb);
                         context.zBuffer.setZ(x, y, z);
                     }
                 }
             }
         }
+    }
+
+    int interpolateColor(Point2D p) {
+        double[] bary = barycentricCoords(p);
+        int red = (int)(bary[0] * colors[0].getRed() + bary[1] * colors[1].getRed() + bary[2] * colors[2].getRed());
+        int green = (int)(bary[0] * colors[0].getGreen() + bary[1] * colors[1].getGreen() + bary[2] * colors[2].getGreen());
+        int blue = (int)(bary[0] * colors[0].getBlue() + bary[1] * colors[1].getBlue() + bary[2] * colors[2].getBlue());
+        int result = red;
+        result = (result << 8) + green;
+        result = (result << 8) + blue;
+        return result;
+    }
+
+    double[] barycentricCoords(Point2D p) {
+        Vector2D v2 = Vector2D.Subtract(p, points[0]);
+        double d20 = Vector2D.Dot(v2, v0);
+        double d21 = Vector2D.Dot(v2, v1);
+        double[] bary = new double[3];
+        bary[1] = (d11 * d20 - d01 * d21) * invDenom;
+        bary[2] = (d00 * d21 - d01 * d20) * invDenom;
+        bary[0] = 1.0d - bary[1] - bary[2];
+        return bary;
     }
 
     PixelType pixelType(int x, int y) {

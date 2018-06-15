@@ -111,7 +111,9 @@ public class Triangle2D {
                 t.getN1(), t.getN2(), t.getN3(), c, c, c, directionToLightSource, Mode.PHONG);
     }
 
-    public static Triangle2D TextureMode(Triangle3D t, Point3D lightSource) {
+    public static Triangle2D
+
+    TextureMode(Triangle3D t, Point3D lightSource) {
         Vector3D directionToLightSource = Vector3D.vectorFromTo(t.getCentroid(), lightSource).normalized();
         return new Triangle2D(t.get2DPoint1(), t.get2DPoint2(), t.get2DPoint3(), t.getCentroidZ(), t.getAverageNormal(),
                 t.getN1(), t.getN2(), t.getN3(), t.getC1(), t.getC2(), t.getC3(), directionToLightSource, Mode.TEXTURE);

@@ -83,7 +83,7 @@ public class AffineTransform3D {
         return this.applying(matrixMultiply(rX, rY));
     }
 
-    ///=================================================================================================================
+    //==================================================================================================================
 
     static double[][] matrixMultiply(double[][] a, double[][] b) {
         double[][] transformed = new double[4][4];

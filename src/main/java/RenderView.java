@@ -12,7 +12,6 @@ public class RenderView extends JPanel {
     private Mode mode = Mode.POLYGONS;
     private Scene scene = null;
     private Triangle2D[] triangles = null;
-    private int[][] textureData = null;
     private Rectangle modelBounds = null;
     private AffineTransform3D rotation = AffineTransform3D.identity()
             .rotatedBy(Math.PI, 0.0)
@@ -30,7 +29,6 @@ public class RenderView extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D)g;
         int w = getWidth();
         int h = getHeight();
         MyContext context = new MyContext(w, h);
@@ -39,7 +37,7 @@ public class RenderView extends JPanel {
         if (mode == Mode.Z_BUFFER) {
             context.drawZBuffer();
         }
-        showSceneBounds(context);
+        //showSceneBounds(context);
         g.drawImage(context.pixels,0 , 0, null);
     }
 

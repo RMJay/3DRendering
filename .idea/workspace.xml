@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ac6afd0b-b29b-41a7-801c-579f9b1e316c" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/Test.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/TestReader.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__gov_nist_math_jama_1_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__gov_nist_math_jama_1_0_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_12.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_12.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/cs4102_p2_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/cs4102_p2_main.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/cs4102_p2_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/cs4102_p2_test.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/AffineTransform3D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/AffineTransform3D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" afterPath="$PROJECT_DIR$/src/main/java/Graphics/Triangle2D.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/RenderView.java" afterPath="$PROJECT_DIR$/src/main/java/RenderView.java" />
-    </list>
+    <list default="true" id="ac6afd0b-b29b-41a7-801c-579f9b1e316c" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -109,8 +94,8 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="854">
-              <caret line="184" column="22" lean-forward="true" selection-start-line="184" selection-start-column="22" selection-end-line="184" selection-end-column="22" />
+            <state relative-caret-position="1120">
+              <caret line="184" column="22" lean-forward="false" selection-start-line="184" selection-start-column="22" selection-end-line="184" selection-end-column="22" />
               <folding>
                 <element signature="e#2294#2295#0" expanded="true" />
                 <element signature="e#2335#2336#0" expanded="true" />
@@ -126,7 +111,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="357">
               <caret line="30" column="44" lean-forward="false" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="44" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#701#702#0" expanded="false" />
+                <element signature="e#745#746#0" expanded="false" />
+                <element signature="e#783#784#0" expanded="false" />
+                <element signature="e#815#816#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -137,6 +128,11 @@
             <state relative-caret-position="119">
               <caret line="8" column="38" lean-forward="false" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
               <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#467#468#0" expanded="false" />
+                <element signature="e#502#503#0" expanded="false" />
+                <element signature="e#532#533#0" expanded="false" />
+                <element signature="e#568#569#0" expanded="false" />
                 <element signature="method#drawZBuffer#0;class#MyContext#0" expanded="false" />
               </folding>
             </state>
@@ -530,8 +526,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="y" value="22" />
     <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="height" value="778" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -600,7 +597,6 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="js.eslint.eslintPackage" value="" />
-    <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -1087,7 +1083,7 @@
     <option name="totallyTimeSpent" value="212075000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="22" width="1280" height="778" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1229,7 +1225,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="14" column="40" lean-forward="true" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#701#702#0" expanded="false" />
+            <element signature="e#745#746#0" expanded="false" />
+            <element signature="e#783#784#0" expanded="false" />
+            <element signature="e#815#816#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1251,7 +1253,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="8" column="18" lean-forward="false" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#701#702#0" expanded="false" />
+            <element signature="e#745#746#0" expanded="false" />
+            <element signature="e#783#784#0" expanded="false" />
+            <element signature="e#815#816#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1273,7 +1281,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="8" column="18" lean-forward="false" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#701#702#0" expanded="false" />
+            <element signature="e#745#746#0" expanded="false" />
+            <element signature="e#783#784#0" expanded="false" />
+            <element signature="e#815#816#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1427,7 +1441,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="30" column="44" lean-forward="false" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="44" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#701#702#0" expanded="false" />
+            <element signature="e#745#746#0" expanded="false" />
+            <element signature="e#783#784#0" expanded="false" />
+            <element signature="e#815#816#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1436,6 +1456,11 @@
         <state relative-caret-position="119">
           <caret line="8" column="38" lean-forward="false" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#467#468#0" expanded="false" />
+            <element signature="e#502#503#0" expanded="false" />
+            <element signature="e#532#533#0" expanded="false" />
+            <element signature="e#568#569#0" expanded="false" />
             <element signature="method#drawZBuffer#0;class#MyContext#0" expanded="false" />
           </folding>
         </state>
@@ -1451,8 +1476,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="854">
-          <caret line="184" column="22" lean-forward="true" selection-start-line="184" selection-start-column="22" selection-end-line="184" selection-end-column="22" />
+        <state relative-caret-position="1120">
+          <caret line="184" column="22" lean-forward="false" selection-start-line="184" selection-start-column="22" selection-end-line="184" selection-end-column="22" />
           <folding>
             <element signature="e#2294#2295#0" expanded="true" />
             <element signature="e#2335#2336#0" expanded="true" />

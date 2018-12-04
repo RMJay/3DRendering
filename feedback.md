@@ -1,0 +1,4 @@
+Grade 19.5
+Feedback from Ognjen Arandelovic at 18/05/2018 13:16:
+
+This is a excellent in every respect. The report is succinct, structured and written well, beautifully presented, with lots of helpful and professionally prepared visual aids (diagrams, screen captures, etc.), and a very good balance of verbal and technical content. The overall work entirely convincingly demonstrates that the student has a firm grasp of the numerous techniques needed to address the task at hand successfully with several interesting, challenging, and useful extensions, also fully successfully completed. Really well done!
